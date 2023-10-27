@@ -1,12 +1,13 @@
 "use client";
+import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@/components/ui/select";
 import {
   Form,
   FormControl,
@@ -20,34 +21,61 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/components/ui/use-toast";
 
-const roleOptions = ['User', 'Admin', 'Super Admin'];
+// const roleOptions = ['User', 'Admin', 'Super Admin'];
 const formSchema = z.object({
   username: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }),
-  password:z.string()
-  .min(8, 'Password must be at least 8 characters long')
-  .refine(value => /[A-Z]/.test(value), {
-    message: 'Password must include at least one uppercase letter',
-  }),
-  role: z.string().refine((value) => roleOptions.includes(value), {
-    message: 'Please select a valid role (user, admin, super admin).',
-  })
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters long")
+    .refine((value) => /[A-Z]/.test(value), {
+      message: "Password must include at least one uppercase letter",
+    }),
+  // role: z.string().refine((value) => roleOptions.includes(value), {
+  //   message: 'Please select a valid role (user, admin, super admin).',
+  // })
 });
 
 const LoginForm = () => {
+  const {toast} = useToast()
+  const router = useRouter();
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
       password: "",
-      role:""
+      // role:""
     },
   });
-  const onSubmit = (values) => {
-    console.log(values);
-  
+
+  const onSubmit = async (values) => {
+    const { username, password } = values;
+
+    const loginData = await signIn("credentials", {
+      username: username,
+      password: password,
+      redirect: false,
+      // callbackUrl:'/'
+    });
+    // console.log(loginData)
+    if (loginData?.error) {
+      console.log(loginData.error);
+      toast({
+        title:'Error',
+        description:'Wrong Username or Password',
+        variant: 'destructive'
+      })
+    } else {
+      toast({
+        title:'Success!',
+        description:'You have logged in successfully'
+      })
+      router.push("/");
+    }
   };
 
   return (
@@ -86,7 +114,7 @@ const LoginForm = () => {
             )}
           />
 
-          <FormField
+          {/* <FormField
             name="role"
             control={form.control}
             render={({ field }) => (
@@ -117,8 +145,10 @@ const LoginForm = () => {
                 <FormMessage />
               </FormItem>
             )}
-          />
-          <Button className='mt-4' type='submit'>Login</Button>
+          /> */}
+          <Button className="mt-4" type="submit">
+            Login
+          </Button>
         </form>
       </Form>
     </>
