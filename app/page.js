@@ -11,7 +11,7 @@ const Homepage = async () => {
 
     const session = await getServerSession(authOptions)
 
-    console.log(session)
+    // console.log(session)
     if(!session?.user){
       
         redirect('/auth/login')

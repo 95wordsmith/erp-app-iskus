@@ -10,12 +10,31 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  password  String
+  role      Role
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  profile   Profile? 
+}
 
- model User {
-  id          String  @id @default(uuid())
-  username    String  @unique
-  password    String
-  role        String
+model Profile {
+  id          String   @id @default(uuid())
+  fullName    String
+  email       String
+  phoneNumber Int
+  address     String
+  dateOfBirth String
+  position    String
   createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt 
+  updatedAt   DateTime @updatedAt
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id],onDelete: Cascade)
+}
+
+enum Role {
+  SUPERADMIN
+  ADMIN
 }
