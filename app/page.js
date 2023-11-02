@@ -11,21 +11,13 @@ const Homepage = async () => {
 
     const session = await getServerSession(authOptions)
 
-    // console.log(session)
-    if(!session?.user){
-      
+    if(!session?.user){ 
         redirect('/auth/login')
+    } else {
+        redirect('/dashboard')
     }
 
-    return ( 
-    <>
-    <h1>Welcome Back {session?.user?.username}</h1>
-    <h2> {session?.user?.role}</h2>
-        <SignOutButton/>
- 
-
-    </>
-     );
+  
   
 }
  

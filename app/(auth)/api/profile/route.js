@@ -46,3 +46,32 @@ export async function POST(req) {
     );
   }
 }
+export async function GET (req){
+    try {
+      const profileData = await prisma.user.findMany({
+        select:{
+          id:true,
+          username:true,
+          role:true,
+          profile:{
+            select:{
+              id:true,
+              fullName: true,
+              email: true,
+              phoneNumber: true,
+              position:true
+            }
+
+          }
+        }
+      })
+      return NextResponse.json({profileData, message:'Profile data retrived successfully'}, {status:200})
+    } catch (error) {
+      console.error(error);
+      return NextResponse.json(
+        { message: "Something went wrong!" },
+        { status: 500 }
+      );
+    }
+
+}
