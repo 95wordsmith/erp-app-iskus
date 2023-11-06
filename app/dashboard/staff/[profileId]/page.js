@@ -1,9 +1,10 @@
+import StaffProfile from "./components/user-profile";
 const ProfileDetails = () => {
+
   return ( 
     <>
-    Profile Details
+    <StaffProfile/>  
     </>
    );
 }
- 
 export default ProfileDetails;

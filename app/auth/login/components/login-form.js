@@ -59,7 +59,7 @@ const LoginForm = () => {
       username: username,
       password: password,
       redirect: false,
-      // callbackUrl:'/'
+      callbackUrl:'/auth/login'
     });
     // console.log(loginData)
     if (loginData?.error) {

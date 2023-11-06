@@ -4,9 +4,12 @@ import { NextResponse } from "next/server";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 
-export async function POST(req) {
+export async function POST(req, {params}) {
   const session = await getServerSession(authOptions)
   console.log('the seesion is ',session?.user?.id)
+  // const { id } = params;
+
+  // console.log(id)
 
 
   const body = await req.json();
@@ -46,6 +49,7 @@ export async function POST(req) {
     );
   }
 }
+
 export async function GET (req){
     try {
       const profileData = await prisma.user.findMany({

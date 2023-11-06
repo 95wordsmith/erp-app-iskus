@@ -24,6 +24,19 @@ export const CellAction = ({ data }) => {
   // console.log('cell action',data.profileId)
 
   const onDelete = async () => {
+    const {id} =data
+    try {
+      const response = await fetch(`/api/user/${id}`, {
+        method: "DELETE",
+      });
+      const data = await response.json();
+      setOpen(false)
+      window.location.reload()
+      // router.refresh();
+
+    } catch (error) {
+      console.log(error.message)
+    }
     // try {
     //   setLoading(true);
     //   await axios.delete(`/api/${params.storeId}/products/${data.id}`);
@@ -56,14 +69,22 @@ export const CellAction = ({ data }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem
+          {data.profileId? <DropdownMenuItem
             onClick={() =>
               router.push(`/dashboard/staff/${data.profileId}`)
             }
           >
             <Edit className="mr-2 h-4 w-4" />
              Details
-          </DropdownMenuItem>
+          </DropdownMenuItem>:
+          <DropdownMenuItem
+            onClick={() =>
+              router.push(`/dashboard/staff/adddetails/${data.id}`)
+            }
+          >
+            <Edit className="mr-2 h-4 w-4" />
+             Add Details
+          </DropdownMenuItem>}
           <DropdownMenuItem onClick={() => setOpen(true)}>
             <Trash className="mr-2 h-4 w-4" />
             Delete

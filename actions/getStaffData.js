@@ -1,38 +1,65 @@
 
+// function convertData(data) {
+  
+//   const convertedData = [];
+
+
+//   data.forEach(item => {
+
+//     const {
+//       id,
+//       username,
+//       role,
+//       profile: { id: profileId, fullName, email, phoneNumber, position },
+//     } = item;
+
+
+//     const convertedItem = {
+//       id,
+//       username,
+//       role,
+  
+//       profileId,
+//       fullName,
+//       email,
+//       phoneNumber,
+//       position,
+//     };
+
+
+//     convertedData.push(convertedItem);
+//   });
+
+//   return convertedData;
+// }
+
 function convertData(data) {
-  // Initialize an empty array to store the converted data
   const convertedData = [];
 
-  // Iterate through the "profileData" array
   data.forEach(item => {
-    // Extract properties from the current item
     const {
       id,
       username,
       role,
-      profile: { id: profileId, fullName, email, phoneNumber, position },
+      profile,
     } = item;
 
-    // Create a new object with the desired properties
     const convertedItem = {
       id,
       username,
       role,
-      profileId,
-      fullName,
-      email,
-      phoneNumber,
-      position,
+      profileId: (profile && profile.id) || null,
+      fullName: (profile && profile.fullName) || null,
+      email: (profile && profile.email) || null,
+      phoneNumber: (profile && profile.phoneNumber) || null,
+      position: (profile && profile.position) || null,
     };
 
-    // Push the converted item into the result array
     convertedData.push(convertedItem);
   });
 
   return convertedData;
 }
-
-
 
 
 const getStaffData = async () => {
