@@ -1,38 +1,4 @@
 
-// function convertData(data) {
-  
-//   const convertedData = [];
-
-
-//   data.forEach(item => {
-
-//     const {
-//       id,
-//       username,
-//       role,
-//       profile: { id: profileId, fullName, email, phoneNumber, position },
-//     } = item;
-
-
-//     const convertedItem = {
-//       id,
-//       username,
-//       role,
-  
-//       profileId,
-//       fullName,
-//       email,
-//       phoneNumber,
-//       position,
-//     };
-
-
-//     convertedData.push(convertedItem);
-//   });
-
-//   return convertedData;
-// }
-
 function convertData(data) {
   const convertedData = [];
 

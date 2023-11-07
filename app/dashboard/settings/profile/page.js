@@ -19,7 +19,7 @@ const ProfilePage = () => {
   const submitForm = async(e) => {
     e.preventDefault()
     const {fullName,email,phoneNumber,address,dateOfBirth,position} = formValues
-    console.log(fullName)
+    // console.log(fullName)
     const response = await fetch('/api/profile',{
       method:'POST',
         "Content-Type": "application/json",

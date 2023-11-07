@@ -28,7 +28,7 @@ export async function PATCH (request, {params}){
 
   const data = await request.json()
 
-  console.log(profileId,data)
+  // console.log(profileId,data)
   try {
     
     

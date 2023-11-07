@@ -6,14 +6,12 @@ import { getServerSession } from "next-auth";
 
 export async function POST(req, {params}) {
   const session = await getServerSession(authOptions)
-  console.log('the seesion is ',session?.user?.id)
-  // const { id } = params;
+  // console.log('the seesion is ',session?.user?.id)
 
-  // console.log(id)
 
 
   const body = await req.json();
-  console.log('this is the body',body)
+  // console.log('this is the body',body)
   const { fullName, email, phoneNumber, address, dateOfBirth, position } = body;
 
   try {

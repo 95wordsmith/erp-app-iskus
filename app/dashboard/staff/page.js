@@ -2,8 +2,7 @@
 
 import { useStaffData } from "@/hooks/useStaffData";
 import { StaffClient } from "./components/client";
-import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+
 
 
 

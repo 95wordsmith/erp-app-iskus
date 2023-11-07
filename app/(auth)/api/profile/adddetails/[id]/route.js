@@ -8,7 +8,7 @@ export async function POST(req, {params}) {
 
 
   const body = await req.json();
-  console.log('this is the body',body)
+  // console.log('this is the body',body)
   const { fullName, email, phoneNumber, address, formmatedDate, position } = body;
 
   try {
