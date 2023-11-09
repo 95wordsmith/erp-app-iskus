@@ -24,6 +24,7 @@ export const CellAction = ({ data }) => {
   // console.log('cell action',data.profileId)
 
   const onDelete = async () => {
+    // const {projectId}=params
     // const {id} =data
     // try {
     //   const response = await fetch(`/api/user/${id}`, {
@@ -71,20 +72,13 @@ export const CellAction = ({ data }) => {
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
          <DropdownMenuItem
             onClick={() =>
-              router.push(`/dashboard/staff/${data.profileId}`)
+              router.push(`/dashboard/projects/${data.id}`)
             }
           >
             <Edit className="mr-2 h-4 w-4" />
-             Details
+             Update
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() =>
-              router.push(`/dashboard/staff/adddetails/${data.id}`)
-            }
-          >
-            <Edit className="mr-2 h-4 w-4" />
-             Add Details
-          </DropdownMenuItem>
+          
           <DropdownMenuItem onClick={() => setOpen(true)}>
             <Trash className="mr-2 h-4 w-4" />
             Delete

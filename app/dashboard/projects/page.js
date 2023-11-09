@@ -1,15 +1,27 @@
-'use client'
-import { useProjectData } from "@/hooks/useProjectData";
+// 'use client'
+import prisma from "@/lib/prisma";
+// import { useProjectData } from "@/hooks/useProjectData";
 import { ProjectClient } from "./components/client";
 import ProjectHeader from "./components/projectHeader";
 
 
-const ProjectsPage = () => {
+const ProjectsPage = async() => {
 
-  const projectData =useProjectData()
-  if(!projectData){
-    return null
-  }
+  // const projectData =useProjectData()
+  // if(!projectData){
+  //   return null
+  // }
+  const projectData = await prisma.projects.findMany({
+    select : {
+      id : true,
+      title :true,
+      type:true,
+      customer:true,
+      status:true,
+      amountTotal:true,
+      createdAt:true
+    }
+  })
 
 
   return ( 

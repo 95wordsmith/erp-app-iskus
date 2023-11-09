@@ -4,7 +4,8 @@ import { NextResponse } from "next/server"
 
 
 export async function POST (res){
-
+// const data = await res.json()
+// console.log(data)
   const {title,pinNum,type,customer,location, amountTotal, status, invoiceUrl } =await res.json()
 // console.log(title,pinNum,type,customer,location, amountTotal, status, invoiceUrl)
 try {
@@ -15,7 +16,7 @@ try {
           type,
           customer,
           location,
-          amountTotal,
+          amountTotal:Number(amountTotal),
           status,
           invoiceUrl  
          } 
