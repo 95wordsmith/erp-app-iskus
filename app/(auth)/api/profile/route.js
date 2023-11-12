@@ -61,6 +61,7 @@ export async function GET (req){
               fullName: true,
               email: true,
               phoneNumber: true,
+              address:true,
               position:true
             }
 

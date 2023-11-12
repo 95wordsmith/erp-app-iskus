@@ -11,7 +11,7 @@ const [data,setData]=useState()
       const response = await fetch(`/api/profile/${profileId}`);
 
       const {profileData} = await response.json();
-      // console.log(profileData);
+    
       setData(profileData)
     };
     getProfileData();

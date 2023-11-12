@@ -75,11 +75,11 @@ export const CellAction = ({ data }) => {
             }
           >
             <Edit className="mr-2 h-4 w-4" />
-             Details
+             Update
           </DropdownMenuItem>:
           <DropdownMenuItem
             onClick={() =>
-              router.push(`/dashboard/staff/adddetails/${data.id}`)
+              router.push(`/dashboard/staff/${data.id}`)
             }
           >
             <Edit className="mr-2 h-4 w-4" />

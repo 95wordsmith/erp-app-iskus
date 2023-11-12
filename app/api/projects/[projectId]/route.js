@@ -62,3 +62,33 @@ try {
 }
 
 }
+
+
+
+
+export async function DELETE(req,{params}) {
+
+  const { projectId } = params;
+
+
+
+  try {
+   
+
+    const deleteUser = await prisma.projects.delete({
+      where: {
+        id:projectId
+      },
+    });
+
+
+
+    return NextResponse.json(
+      { message: 'Project deleted successfully' },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error(error.message);
+    return NextResponse.json({ message: 'Something went wrong!' }, { status: 500 });
+  }
+}

@@ -1,5 +1,5 @@
 
-function convertData(data) {
+export function convertData(data) {
   const convertedData = [];
 
   data.forEach(item => {
@@ -18,6 +18,7 @@ function convertData(data) {
       fullName: (profile && profile.fullName) || null,
       email: (profile && profile.email) || null,
       phoneNumber: (profile && profile.phoneNumber) || null,
+      address: (profile && profile.address) || null,
       position: (profile && profile.position) || null,
     };
 

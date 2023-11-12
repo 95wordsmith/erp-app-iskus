@@ -1,5 +1,5 @@
 "use client";
-
+import { useToast } from "@/components/ui/use-toast";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,30 +14,38 @@ import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { AlertModal } from "@/components/ui/modals/alert-modal";
 
-
 export const CellAction = ({ data }) => {
+  const {toast} = useToast()
   const router = useRouter();
   const params = useParams();
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
-  // console.log('cell action',data.profileId)
 
   const onDelete = async () => {
-    // const {projectId}=params
-    // const {id} =data
-    // try {
-    //   const response = await fetch(`/api/user/${id}`, {
-    //     method: "DELETE",
-    //   });
-    //   const data = await response.json();
-    //   setOpen(false)
-    //   window.location.reload()
-     
-
-    // } catch (error) {
-    //   console.log(error.message)
-    // }
+    const {id} =data
+    try {
+      const response = await fetch(`/api/projects/${id}`, {
+        method: "DELETE",
+      });
+      const data = await response.json();
+      setOpen(false)
+      toast({
+        title:'Success!',
+        description:'Project deleted successfully!'
+      })
+      setTimeout(() => {
+        window.location.reload()
+        
+      }, 1000);
+    } catch (error) {
+      console.log(error.message)
+      toast({
+        title:'Error',
+        description:'Something went wrong!',
+        variant: 'destructive'
+      })
+    }
     // try {
     //   setLoading(true);
     //   await axios.delete(`/api/${params.storeId}/products/${data.id}`);
@@ -53,6 +61,11 @@ export const CellAction = ({ data }) => {
     //   setOpen(false);
     // }
   };
+  const onDownload =()=>{
+    const {invoiceUrl} =data
+    window.open(invoiceUrl,'_blank')
+  }
+
   return (
     <>
       <AlertModal
@@ -70,15 +83,17 @@ export const CellAction = ({ data }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-         <DropdownMenuItem
-            onClick={() =>
-              router.push(`/dashboard/projects/${data.id}`)
-            }
+          <DropdownMenuItem
+            onClick={() => router.push(`/dashboard/projects/${data.id}`)}
           >
             <Edit className="mr-2 h-4 w-4" />
-             Update
+            Update
           </DropdownMenuItem>
-          
+          <DropdownMenuItem onClick={onDownload}>
+            <Edit className="mr-2 h-4 w-4" />
+            Download Invoice
+          </DropdownMenuItem>
+
           <DropdownMenuItem onClick={() => setOpen(true)}>
             <Trash className="mr-2 h-4 w-4" />
             Delete

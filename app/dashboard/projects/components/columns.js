@@ -14,6 +14,10 @@ export const columns= [
     header: "Title",
   },
   {
+    accessorKey: "pinNum",
+    header: "PIN No",
+  },
+  {
     accessorKey:"type",
     header: ({ column }) => {
       return (
@@ -30,6 +34,10 @@ export const columns= [
   {
     accessorKey:"customer",
     header: 'Customer'
+  },
+  {
+    accessorKey: "location",
+    header: "Location",
   },
   {
     accessorKey:"status",

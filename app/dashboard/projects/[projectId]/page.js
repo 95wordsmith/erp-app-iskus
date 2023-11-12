@@ -23,8 +23,8 @@ const projectCreateOrUpdate =  async({params}) => {
     }
   })
 
-
-   
+// console.log(projectData)
+  
   return (
      <>
       <div className="flex-col">
