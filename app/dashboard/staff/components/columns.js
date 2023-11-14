@@ -54,7 +54,12 @@ export const columns= [
   },
   {
     accessorKey:"phoneNumber",
-    header: 'PhoneNumber'
+    header: 'PhoneNumber',
+    cell:({row})=>{
+      const value = parseFloat(row.getValue("phoneNumber"))
+      const format= value? '0' + value.toString():null
+    return <div>{format}</div>
+    }
   },
   {
     id:'actions',

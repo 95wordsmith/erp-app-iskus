@@ -11,7 +11,7 @@ const projectCreateOrUpdate =  async({params}) => {
     },
     select : {
       amountTotal:true,
-      createdAt:true,
+      date:true,
       customer:true,
       invoiceUrl:true,
       location:true,
@@ -23,7 +23,7 @@ const projectCreateOrUpdate =  async({params}) => {
     }
   })
 
-// console.log(projectData)
+
   
   return (
      <>

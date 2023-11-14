@@ -13,10 +13,7 @@ import prisma from "@/lib/prisma";
 import UserProfileForm from "./components/user-profile-form";
 // import { ProjectForm } from "./components/projectForm";
 
-function convertProfiledata(data) {
-  const { profile } = data;
-  return profile;
-}
+
 const StaffCreateOrUpdate = async ({ params }) => {
   const { profileId } = params;
   const profileData = await prisma.profile.findUnique({
@@ -34,8 +31,7 @@ const StaffCreateOrUpdate = async ({ params }) => {
       },
   
   });
-console.log(profileData)
-  // const profile = profileData? convertProfiledata(profileData):null
+
 
   return (
     <>

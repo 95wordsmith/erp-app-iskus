@@ -21,6 +21,8 @@ import { useState } from "react";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
+import { useToast } from "@/components/ui/use-toast";
+
 import {
   Popover,
   PopoverContent,
@@ -61,15 +63,18 @@ const formSchema = z.object({
   pinNum: z.string().min(1),
   location: z.string().min(1),
   invoiceUrl: stringOrFileSchema,
-  createdAt: z.date(),
+  date: z.date(),
   amountTotal: stringOrNumberSchema,
+  // amountTotal: z.number(),
   customer: z.string().min(1),
 });
 
 export const ProjectForm = ({ intialData }) => {
-  // console.log('inital data ',intialData)
+ 
   const params = useParams();
   const router = useRouter();
+  const {toast} = useToast()
+
 
   const {projectId}= params
 
@@ -80,7 +85,6 @@ export const ProjectForm = ({ intialData }) => {
   const description = intialData
     ? "Update Project Details"
     : "Create a New Project";
-  const toastMessage = intialData ? "Billboard updated" : "Billboard created";
   const action = intialData ? "Save changes" : "Create";
 
   const form = useForm({
@@ -92,21 +96,22 @@ export const ProjectForm = ({ intialData }) => {
       pinNum: "",
       location: "",
       invoiceUrl: new File([], ""),
-      createdAt: new Date(),
-      amountTotal: "",
+      date: new Date(),
+      amountTotal: 0,
       customer: "",
     },
   });
 
   const onSubmit = async (data) => {
+    console.log(data)
+   
     const {invoiceUrl} = data
     try {
-      setLoading(true)
       const fileRef =ref(storage,`invoices/${invoiceUrl.name + v4()}`)
       const uploadTask = await uploadBytes(fileRef, invoiceUrl);
       const snapshot = await getDownloadURL(uploadTask.ref);
       data.invoiceUrl = snapshot;
-      console.log(data)
+      setLoading(true)
       if(intialData){
         const response = await fetch (`/api/projects/${projectId}`,{
           method:'PATCH',
@@ -115,8 +120,11 @@ export const ProjectForm = ({ intialData }) => {
             },
             body: JSON.stringify(data)
         })
-            router.refresh();
-      router.push(`/dashboard/projects`);
+        toast({
+          title:'Success',
+          description:'Project Details Updated Successfully!',
+        })
+        
       }else{
         const response = await fetch ('/api/projects',{
           method:'POST',
@@ -124,54 +132,52 @@ export const ProjectForm = ({ intialData }) => {
                 'Content-Type':'application/json'
             },
             body: JSON.stringify(data)
-        })
-        if(response.ok){
-          alert('success')
-        }else{
-          throw new Error('Something went wrong!');
+          })
+          toast({
+            title:'Success',
+            description:'Project Details Created Successfully!',
+          })
         }
-      }
+      router.refresh();
+      router.push(`/dashboard/projects`)
       } catch (error) {
         console.log(error.message)
+        toast({
+          title:'Error',
+          description:'Something went wrong!',
+          variant: 'destructive'
+        })
+      } finally{
+        setLoading(false)
       }
 
-
-    // try {
-    //   setLoading(true);
-    //   if (intialData) {
-    //     await axios.patch(
-    //       `/api/${params.storeId}/billboards/${params.billboardId}`,
-    //       data
-    //     );
-    //   } else {
-    //     await axios.post(`/api/${params.storeId}/billboards`, data);
-    //   }
-    //   router.refresh();
-    //   router.push(`/${params.storeId}/billboards`);
-    //   toast.success(toastMessage);
-    // } catch (error) {
-    //   toast.error("Something went wrong.");
-    // } finally {
-    //   setLoading(false);
-    // }
-  };
+  }
   const onDelete = async () => {
-    // try {
-    //   setLoading(true);
-    //   await axios.delete(
-    //     `/api/${params.storeId}/billboards/${params.billboardId}`
-    //   );
-    //   router.refresh();
-    //   router.push(`/${params.storeId}/billboards`);
-    //   toast.success("Billboard deleted.");
-    // } catch (error) {
-    //   toast.error(
-    //     "Make sure you removed all categories using this billboard first."
-    //   );
-    // } finally {
-    //   setLoading(false);
-    //   setOpen(false);
-    // }
+    try {
+      setLoading(true);
+      const response = await fetch (`/api/projects/${projectId}`, {
+        method: "DELETE",
+      });
+      const data = await response.json();
+      router.push(`/dashboard/projects`)
+
+      toast({
+        title:'Success',
+        description:'Project Deleted Successfully!',
+      })
+    } catch (error) {
+      console.log(error.message)
+
+      toast({
+        title:'Error',
+        description:'Something went wrong!',
+        variant: 'destructive'
+      })
+    } finally {
+         setLoading(false);
+      setOpen(false);
+    }
+
   };
 
   return (
@@ -294,8 +300,7 @@ export const ProjectForm = ({ intialData }) => {
                     <Input
                       disabled={loading}
                       placeholder="Pin Number"
-                      onChange={field.onChange}
-                      // {...field}
+                      {...field}
                     />
                   </FormControl>
                   <FormMessage />
@@ -341,7 +346,7 @@ export const ProjectForm = ({ intialData }) => {
 
             <FormField
               control={form.control}
-              name="createdAt"
+              name="date"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel className={cn('mb-2')}>Date</FormLabel>
@@ -349,6 +354,7 @@ export const ProjectForm = ({ intialData }) => {
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
+                        disabled={loading}
                           variant={"outline"}
                           className={cn(
                             " h-10 w-full pl-3 text-left font-normal",
@@ -388,8 +394,9 @@ export const ProjectForm = ({ intialData }) => {
                   <FormLabel>Total Amount</FormLabel>
                   <FormControl>
                     <Input
+                    type='number'
                       disabled={loading}
-                      placeholder="Billboard label"
+                      placeholder="Total Amount"
                       {...field}
                     />
                   </FormControl>
@@ -412,11 +419,13 @@ export const ProjectForm = ({ intialData }) => {
                       onChange={(e) =>
                         field.onChange(e.target.files ? e.target.files[0] : null)
                       }
+                      // value={field.value}
+
                 
                   
                       />
                   </FormControl>
-                      {/* <Upload/> */}
+               
                   <FormMessage />
                 </FormItem>
               )}

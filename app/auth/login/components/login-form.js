@@ -1,13 +1,7 @@
 "use client";
 import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
-// import {
-//   Select,
-//   SelectContent,
-//   SelectItem,
-//   SelectTrigger,
-//   SelectValue,
-// } from "@/components/ui/select";
+
 import {
   Form,
   FormControl,
@@ -24,7 +18,7 @@ import * as z from "zod";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 
-// const roleOptions = ['User', 'Admin', 'Super Admin'];
+
 const formSchema = z.object({
   username: z.string().min(2, {
     message: "Username must be at least 2 characters.",
@@ -35,9 +29,7 @@ const formSchema = z.object({
     .refine((value) => /[A-Z]/.test(value), {
       message: "Password must include at least one uppercase letter",
     }),
-  // role: z.string().refine((value) => roleOptions.includes(value), {
-  //   message: 'Please select a valid role (user, admin, super admin).',
-  // })
+
 });
 
 const LoginForm = () => {
@@ -48,7 +40,6 @@ const LoginForm = () => {
     defaultValues: {
       username: "",
       password: "",
-      // role:""
     },
   });
 
@@ -61,7 +52,7 @@ const LoginForm = () => {
       redirect: false,
       callbackUrl:'/auth/login'
     });
-    // console.log(loginData)
+ 
     if (loginData?.error) {
       console.log(loginData.error);
       toast({
@@ -114,38 +105,7 @@ const LoginForm = () => {
             )}
           />
 
-          {/* <FormField
-            name="role"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Role</FormLabel>
-                <FormControl>
-                  <Select
-                    // disabled={loading}
-                    onValueChange={field.onChange}
-                    value={field.value}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue
-                          defaultValue={field.value}
-                          placeholder="Select a Role"
-                        />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="Super Admin">Super Admin</SelectItem>
-                      <SelectItem value="Admin">Regular Admin</SelectItem>
-                      <SelectItem value="User">User</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          /> */}
+      
           <Button className="mt-4" type="submit">
             Login
           </Button>

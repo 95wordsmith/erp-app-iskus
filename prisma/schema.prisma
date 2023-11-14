@@ -44,6 +44,7 @@ model Projects {
   amountTotal   Float
   status        Status
   invoiceUrl    String
+  date        DateTime
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }

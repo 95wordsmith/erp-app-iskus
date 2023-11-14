@@ -23,7 +23,7 @@ const StaffPage = async () => {
     }
   })
   const profileDetails = convertData(profileData);
-  // console.log(profileData)
+
 
   return (
     <>

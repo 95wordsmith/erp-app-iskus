@@ -81,7 +81,7 @@ export const columns= [
     }
   },
   {
-    accessorKey:"createdAt",
+    accessorKey:"date",
     header: ({ column }) => {
       return (
         <Button
@@ -94,7 +94,7 @@ export const columns= [
       )
     },
     cell:({row})=>{
-      const date= new Date(row.getValue('createdAt'))
+      const date= new Date(row.getValue('date'))
       const date2 = format(date,'PPP')
       const formatted = date.toLocaleDateString()
       return <div className='font-medium'>{date2}</div>

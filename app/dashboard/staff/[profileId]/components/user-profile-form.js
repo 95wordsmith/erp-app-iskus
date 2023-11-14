@@ -30,10 +30,10 @@ import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 const stringOrNumberSchema = z.custom((data) => {
-  if (typeof data === 'string' || typeof data === 'number') {
+  if (typeof data === "string" || typeof data === "number") {
     return data;
   } else {
-    throw new Error('Invalid type. Must be a string or a number.');
+    throw new Error("Invalid type. Must be a string or a number.");
   }
 });
 
@@ -48,9 +48,8 @@ const formSchema = z.object({
 });
 
 const UserProfileForm = ({ intialData }) => {
- 
   const { profileId } = useParams();
-  // console.log('this is actually the userId',profileId)
+
 
   const { toast } = useToast();
   const router = useRouter();
@@ -62,13 +61,12 @@ const UserProfileForm = ({ intialData }) => {
   const description = intialData
     ? "Update Profile Details"
     : "Add Profle Details";
-  const toastMessage = intialData ? "Billboard updated" : "Billboard created";
-  const action = intialData ? "Save changes" : "Create";
 
+  const action = intialData ? "Save changes" : "Add";
 
   const form = useForm({
     resolver: zodResolver(formSchema),
-    defaultValues: intialData|| {
+    defaultValues: intialData || {
       fullName: "",
       email: "",
       address: "",
@@ -81,97 +79,90 @@ const UserProfileForm = ({ intialData }) => {
     const { fullName, email, address, phoneNumber, position } = data;
 
     try {
-      // setLoading(true)
-   
-      if(intialData){
-
-        const response = await fetch(`/api/profile/${profileId}`,{
+      setLoading(true);
+      if (intialData) {
+        const response = await fetch(`/api/profile/${profileId}`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ fullName,email,address,phoneNumber,position }),
+          body: JSON.stringify({
+            fullName,
+            email,
+            address,
+            phoneNumber,
+            position,
+          }),
         });
-    const data = await response.json();
+        const data = await response.json();
+        toast({
+          title: "Success",
+          description: "Profile Details Updated Successfully!",
+        });
+      } else {
+        const response = await fetch(`/api/profile/${profileId}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            fullName,
+            email,
+            address,
+            phoneNumber,
+            position,
+          }),
+        });
+        toast({
+          title: "Success",
+          description: "Profile Details Created Successfully!",
+        });
+      }
+      router.refresh();
       router.push(`/dashboard/staff`);
-      }else{
-        try {
-          const response = await fetch (`/api/profile/${profileId}`,{
-            method:'POST',
-              headers:{
-                  'Content-Type':'application/json'
-              },
-              body: JSON.stringify({
-                fullName,
-                email,
-                address,
-                phoneNumber,
-                position,
-              }),
-          })
-          // router.push(`/dashboard/staff`);
-          
-        } catch (error) {
-          console.log(error.message)
-        }
-
-        // if(response.ok){
-        //   alert('success')
-        // }else{
-        //   throw new Error('Something went wrong!');
-        // }
-      }
-      } catch (error) {
-        console.log(error.message)
-      }
-    // const { fullName, email, address, phoneNumber, position } = values;
-    // const formmatedDate = format(dateOfBirth, "PPP");
-    // console.log(fullName, email, formmatedDate, address, phoneNumber, position);
-
-    // const response = await fetch(`/api/profile/${profileId}`, {
-    //   method: "PATCH",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     fullName,
-    //     email,
-    //     formmatedDate,
-    //     address,
-    //     phoneNumber,
-    //     position,
-    //   }),
-    // });
-    // const data = await response.json();
-
-    // const loginData = await signIn("credentials", {
-    //   username: username,
-    //   password: password,
-    //   redirect: false,
-
-    // });
-
-    // if (loginData?.error) {
-    //   console.log(loginData.error);
-    //   toast({
-    //     title:'Error',
-    //     description:'Wrong Username or Password',
-    //     variant: 'destructive'
-    //   })
-    // } else {
-    //   toast({
-    //     title:'Success!',
-    //     description:'You have logged in successfully'
-    //   })
-    //   router.push("/");
-    // }
+    } catch (error) {
+      console.log(error.message);
+      toast({
+        title:'Error',
+        description:'Something went wrong!',
+        variant: 'destructive'
+      })
+    } finally {
+      setLoading(false);
+      setOpen(false);
+    }
   };
-const onDelete =()=>{
+  const onDelete = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch (`/api/profile/${profileId}`, {
+        method: "DELETE",
+      });
+      const data = await response.json();
+      router.push(`/dashboard/staff`)
 
-}
+      toast({
+        title:'Success',
+        description:'Profile Details Deleted Successfully!',
+      })
+      router.refresh();
+
+    } catch (error) {
+      console.log(error.message)
+
+      toast({
+        title:'Error',
+        description:'Something went wrong!',
+        variant: 'destructive'
+      })
+    } finally {
+         setLoading(false);
+      setOpen(false);
+    }
+  };
   return (
     <>
-    <AlertModal
+      <AlertModal
         isOpen={open}
         onClose={() => setOpen(false)}
         onConfirm={onDelete}
@@ -191,12 +182,12 @@ const onDelete =()=>{
         )}
       </div>
       <Separator />
-        <Form asChild {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-8  w-full"
-          >
-             <div className="grid grid-cols-3 gap-8">
+      <Form asChild {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-8  w-full"
+        >
+          <div className="grid grid-cols-3 gap-8">
             <FormField
               control={form.control}
               name="fullName"
@@ -204,7 +195,11 @@ const onDelete =()=>{
                 <FormItem>
                   <FormLabel>Full Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Full Name" {...field} />
+                    <Input
+                      placeholder="Full Name"
+                      disabled={loading}
+                      {...field}
+                    />
                   </FormControl>
 
                   <FormMessage />
@@ -218,7 +213,12 @@ const onDelete =()=>{
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input type="email" placeholder="email" {...field} />
+                    <Input
+                      type="email"
+                      placeholder="email"
+                      disabled={loading}
+                      {...field}
+                    />
                   </FormControl>
 
                   <FormMessage />
@@ -233,7 +233,12 @@ const onDelete =()=>{
                 <FormItem>
                   <FormLabel>Residential Address</FormLabel>
                   <FormControl>
-                    <Input type="text" placeholder="Address" {...field} />
+                    <Input
+                      type="text"
+                      placeholder="Address"
+                      disabled={loading}
+                      {...field}
+                    />
                   </FormControl>
 
                   <FormMessage />
@@ -247,7 +252,12 @@ const onDelete =()=>{
                 <FormItem>
                   <FormLabel>Position</FormLabel>
                   <FormControl>
-                    <Input type="text" placeholder="Position" {...field} />
+                    <Input
+                      type="text"
+                      placeholder="Position"
+                      disabled={loading}
+                      {...field}
+                    />
                   </FormControl>
 
                   <FormMessage />
@@ -261,20 +271,24 @@ const onDelete =()=>{
                 <FormItem>
                   <FormLabel>Phone Number</FormLabel>
                   <FormControl>
-                    <Input type="text" placeholder="Phone number" {...field} />
+                    <Input
+                      type="text"
+                      placeholder="Phone number"
+                      disabled={loading}
+                      {...field}
+                    />
                   </FormControl>
 
                   <FormMessage />
                 </FormItem>
               )}
             />
-</div>
-            <Button className="ml-auto" type="submit">
-              Submit
-            </Button>
-          </form>
-        </Form>
-   
+          </div>
+          <Button disabled={loading} className="ml-auto" type="submit">
+            {action}
+          </Button>
+        </form>
+      </Form>
     </>
   );
 };

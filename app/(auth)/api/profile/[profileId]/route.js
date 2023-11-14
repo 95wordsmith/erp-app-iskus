@@ -87,3 +87,30 @@ export async function PATCH(req, { params }) {
     );
   }
 }
+
+
+export async function DELETE(req,{params}) {
+
+  const { profileId } = params;
+
+
+  try {
+   
+
+    const deleteUser = await prisma.profile.delete({
+      where: {
+        id:profileId
+      },
+    });
+
+
+
+    return NextResponse.json(
+      { message: 'Profile deleted successfully' },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error(error.message);
+    return NextResponse.json({ message: 'Something went wrong!' }, { status: 500 });
+  }
+}

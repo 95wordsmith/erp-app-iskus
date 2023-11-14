@@ -132,6 +132,7 @@ import {
   flexRender,
   SortingState,
   ColumnFiltersState,
+  VisibilityState,
   getFilteredRowModel,
   getCoreRowModel,
   getPaginationRowModel,
@@ -148,7 +149,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu'
 
 export function DataTable({
   searchKey,
@@ -160,6 +166,8 @@ export function DataTable({
   const [columnFilters, setColumnFilters] = React.useState(
     []
   )
+  const [columnVisibility, setColumnVisibility] =
+  React.useState({})
 
   const table = useReactTable({
     data,
@@ -167,6 +175,7 @@ export function DataTable({
     state: {
       sorting,
       columnFilters,
+      columnVisibility
     },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -174,6 +183,7 @@ export function DataTable({
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+    onColumnVisibilityChange: setColumnVisibility,
   })
 
   return (
@@ -187,14 +197,34 @@ export function DataTable({
           }
           className="max-w-sm"
         />
-        {/* <Input
-          placeholder="Search"
-          value={(table.getColumn("title")?.getFilterValue()) ?? ""}
-          onChange={(event) =>
-            table.getColumn("title")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        /> */}
+      <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="ml-auto">
+              Columns
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {table
+              .getAllColumns()
+              .filter(
+                (column) => column.getCanHide()
+              )
+              .map((column) => {
+                return (
+                  <DropdownMenuCheckboxItem
+                    key={column.id}
+                    className="capitalize"
+                    checked={column.getIsVisible()}
+                    onCheckedChange={(value) =>
+                      column.toggleVisibility(!!value)
+                    }
+                  >
+                    {column.id}
+                  </DropdownMenuCheckboxItem>
+                )
+              })}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     <div className="rounded-md border">
       <Table>

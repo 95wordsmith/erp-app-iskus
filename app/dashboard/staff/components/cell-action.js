@@ -13,44 +13,47 @@ import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { AlertModal } from "@/components/ui/modals/alert-modal";
+import { useToast } from "@/components/ui/use-toast";
 
 
 export const CellAction = ({ data }) => {
+  const {toast}= useToast()
   const router = useRouter();
   const params = useParams();
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
-  // console.log('cell action',data.profileId)
+ 
 
   const onDelete = async () => {
     const {id} =data
+      setLoading(true);
     try {
       const response = await fetch(`/api/user/${id}`, {
         method: "DELETE",
       });
       const data = await response.json();
       setOpen(false)
+      router.refresh();
+      toast({
+        title:'Success!',
+        description:'User Deleted Successfully!',
+      })
       window.location.reload()
      
 
     } catch (error) {
       console.log(error.message)
+      toast({
+        title:'Error',
+        description:'Something went wrong!',
+        variant: 'destructive'
+      })
+    }finally{
+            setLoading(false);
+      setOpen(false);
     }
-    // try {
-    //   setLoading(true);
-    //   await axios.delete(`/api/${params.storeId}/products/${data.id}`);
-    //   router.refresh();
-    //   router.push(`/${params.storeId}/products`)
-    //   toast.success("Product deleted.");
-    // } catch (error) {
-    //   toast.error(
-    //     "Something went wrong."
-    //   );
-    // } finally {
-    //   setLoading(false);
-    //   setOpen(false);
-    // }
+  
   };
   return (
     <>

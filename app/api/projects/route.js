@@ -6,7 +6,7 @@ import { NextResponse } from "next/server"
 export async function POST (res){
 // const data = await res.json()
 // console.log(data)
-  const {title,pinNum,type,customer,location, amountTotal, status, invoiceUrl } =await res.json()
+  const {title,pinNum,type,customer,location, amountTotal, status, invoiceUrl,date } =await res.json()
 // console.log(title,pinNum,type,customer,location, amountTotal, status, invoiceUrl)
 try {
   const projectData = await prisma.projects.create({
@@ -18,11 +18,12 @@ try {
           location,
           amountTotal:Number(amountTotal),
           status,
-          invoiceUrl  
+          invoiceUrl,
+          date  
          } 
   })
 
- return  NextResponse.json('success',{status:201})
+ return  NextResponse.json(projectData,{status:201})
   
 } catch (error) {
   console.log(error)
@@ -39,7 +40,7 @@ export async function GET (req){
       customer:true,
       status:true,
       amountTotal:true,
-      createdAt:true
+      date:true
     }
   })
   return  NextResponse.json(projectData,{status:200})

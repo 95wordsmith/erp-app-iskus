@@ -26,7 +26,7 @@ import * as z from "zod";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 
-const roleOptions = ['SUPERADMIN','ADMIN'];
+const roleOptions = ["SUPERADMIN", "ADMIN"];
 const formSchema = z.object({
   username: z.string().min(2, {
     message: "Username must be at least 2 characters.",
@@ -38,70 +38,44 @@ const formSchema = z.object({
       message: "Password must include at least one uppercase letter",
     }),
   role: z.string().refine((value) => roleOptions.includes(value), {
-    message: 'Please select a valid role (SUPER ADMIN OR ADMIN).',
-  })
+    message: "Please select a valid role (SUPER ADMIN OR ADMIN).",
+  }),
 });
 
 const CreateUserForm = () => {
-  const {toast} = useToast()
-  const accessControls = useCreateUserModal()
+  const { toast } = useToast();
+  const accessControls = useCreateUserModal();
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
       password: "",
-      role:""
+      role: "",
     },
   });
 
   const onSubmit = async (values) => {
-    // console.log(values)
-    const { username, password,role } = values;
-
-  
+    const { username, password, role } = values;
 
     try {
-      const response = await fetch('/api/user',{
-        method:'POST',
-          "Content-Type": "application/json",
-          body:JSON.stringify({username,password,role})
-      })
-      accessControls.onClose()
+      const response = await fetch("/api/user", {
+        method: "POST",
+        "Content-Type": "application/json",
+        body: JSON.stringify({ username, password, role }),
+      });
+      accessControls.onClose();
       toast({
-        title:'Success',
-        description:'User Created Successfully',
-      })
+        title: "Success",
+        description: "User Created Successfully",
+      });
     } catch (error) {
-      console.log(error)
+      console.log(error);
       toast({
-        title:'Error',
-        description:'Wrong Username or Password',
-        variant: 'destructive'
-      })
+        title: "Error",
+        description: "Wrong Username or Password",
+        variant: "destructive",
+      });
     }
-    
-
-    // const loginData = await signIn("credentials", {
-    //   username: username,
-    //   password: password,
-    //   redirect: false,
-    //   // callbackUrl:'/'
-    // });
-    // // console.log(loginData)
-    // if (loginData?.error) {
-    //   console.log(loginData.error);
-    //   toast({
-    //     title:'Error',
-    //     description:'Wrong Username or Password',
-    //     variant: 'destructive'
-    //   })
-    // } else {
-    //   toast({
-    //     title:'Success!',
-    //     description:'You have logged in successfully'
-    //   })
-    //   router.push("/");
-    // }
   };
 
   return (
@@ -172,7 +146,7 @@ const CreateUserForm = () => {
             )}
           />
           <Button className="mt-4" type="submit">
-            Login
+            Create
           </Button>
         </form>
       </Form>

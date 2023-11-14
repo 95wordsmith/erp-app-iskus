@@ -11,7 +11,7 @@ try {
     },
     select : {
       amountTotal:true,
-      createdAt:true,
+      date:true,
       customer:true,
       invoiceUrl:true,
       location:true,
@@ -26,6 +26,7 @@ try {
   
 } catch (error) {
   console.log(error.message)
+  return NextResponse.json({ message: 'Something went wrong!' }, { status: 500 });
   
 }
 
@@ -33,7 +34,7 @@ try {
 
 export async function PATCH (req,{params}){
   const { projectId } = params;
-  const {title,pinNum,type,customer,location, amountTotal, status, invoiceUrl } =await req.json()
+  const {title,pinNum,type,customer,location, amountTotal, status, invoiceUrl,date } =await req.json()
 
   // console.log('project id',projectId)
   
@@ -51,13 +52,15 @@ try {
       location,
       amountTotal:Number(amountTotal),
       status,
-      invoiceUrl  
+      invoiceUrl,
+      date  
      } 
   })
   return  NextResponse.json(projectData,{status:200})
   
 } catch (error) {
   console.log(error.message)
+  return NextResponse.json({ message: 'Something went wrong!' }, { status: 500 });
   
 }
 
