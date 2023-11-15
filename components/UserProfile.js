@@ -30,13 +30,13 @@ const UserProfile = () => {
             <p className="text-[0.7rem] font-bold">{session?.user?.role}</p>
           </div>
           <div className="text-sm flex-col flex gap-2 mt-2" >
-            <Link href="/">
+            <Link href="/dashboard/staff">
               <div className="flex space-x-32 p-2  hover:bg-slate-200/40 rounded-lg shadow-sm">
                 <UserCircle2 />
                 <span> Profile</span>
               </div>
             </Link>
-            <Link href="/settings/profile">
+            <Link href="/dashboard/settings">
               <div className="flex space-x-32  p-2 hover:bg-slate-200/40 rounded-lg shadow-sm">
                 <UserCog2 />
                 <span> Settings</span>

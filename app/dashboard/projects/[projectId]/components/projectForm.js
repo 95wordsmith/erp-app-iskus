@@ -1,7 +1,7 @@
 "use client";
 import { storage } from "@/lib/firebase";
-import {v4} from 'uuid'
-import {ref,uploadBytes,getDownloadURL} from 'firebase/storage'
+import { v4 } from "uuid";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import * as z from "zod";
 import {
   Select,
@@ -41,18 +41,18 @@ import { Input } from "@/components/ui/input";
 import { useParams, useRouter } from "next/navigation";
 import { AlertModal } from "@/components/ui/modals/alert-modal";
 const stringOrFileSchema = z.custom((data) => {
-  if (typeof data === 'string' || data instanceof File) {
+  if (typeof data === "string" || data instanceof File) {
     return data;
   } else {
-    throw new Error('Invalid type. Must be a string or a File.');
+    throw new Error("Invalid type. Must be a string or a File.");
   }
 });
 
 const stringOrNumberSchema = z.custom((data) => {
-  if (typeof data === 'string' || typeof data === 'number') {
+  if (typeof data === "string" || typeof data === "number") {
     return data;
   } else {
-    throw new Error('Invalid type. Must be a string or a number.');
+    throw new Error("Invalid type. Must be a string or a number.");
   }
 });
 
@@ -62,21 +62,20 @@ const formSchema = z.object({
   status: z.string().min(1),
   pinNum: z.string().min(1),
   location: z.string().min(1),
-  invoiceUrl: stringOrFileSchema,
+  invoiceUrl: z.any(),
   date: z.date(),
   amountTotal: stringOrNumberSchema,
-  // amountTotal: z.number(),
   customer: z.string().min(1),
 });
 
 export const ProjectForm = ({ intialData }) => {
- 
+  const { invoiceUrl, ...data } = intialData || {};
+
   const params = useParams();
   const router = useRouter();
-  const {toast} = useToast()
+  const { toast } = useToast();
 
-
-  const {projectId}= params
+  const { projectId } = params;
 
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -89,13 +88,13 @@ export const ProjectForm = ({ intialData }) => {
 
   const form = useForm({
     resolver: zodResolver(formSchema),
-    defaultValues: intialData || {
+    defaultValues: data || {
       title: "",
       type: "",
       status: "",
       pinNum: "",
       location: "",
-      invoiceUrl: new File([], ""),
+      invoiceUrl: "",
       date: new Date(),
       amountTotal: 0,
       customer: "",
@@ -103,86 +102,85 @@ export const ProjectForm = ({ intialData }) => {
   });
 
   const onSubmit = async (data) => {
-    console.log(data)
-   
-    const {invoiceUrl} = data
-    try {
-      const fileRef =ref(storage,`invoices/${invoiceUrl.name + v4()}`)
-      const uploadTask = await uploadBytes(fileRef, invoiceUrl);
-      const snapshot = await getDownloadURL(uploadTask.ref);
-      data.invoiceUrl = snapshot;
-      setLoading(true)
-      if(intialData){
-        const response = await fetch (`/api/projects/${projectId}`,{
-          method:'PATCH',
-            headers:{
-                'Content-Type':'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-        toast({
-          title:'Success',
-          description:'Project Details Updated Successfully!',
-        })
-        
-      }else{
-        const response = await fetch ('/api/projects',{
-          method:'POST',
-            headers:{
-                'Content-Type':'application/json'
-            },
-            body: JSON.stringify(data)
-          })
-          toast({
-            title:'Success',
-            description:'Project Details Created Successfully!',
-          })
-        }
-      router.refresh();
-      router.push(`/dashboard/projects`)
-      } catch (error) {
-        console.log(error.message)
-        toast({
-          title:'Error',
-          description:'Something went wrong!',
-          variant: 'destructive'
-        })
-      } finally{
-        setLoading(false)
-      }
+    const { invoiceUrl, ...restData } = data;
 
-  }
+    const passedData = invoiceUrl ? data : restData;
+
+    try {
+      setLoading(true);
+      if (invoiceUrl) {
+        const fileRef = ref(storage, `invoices/${invoiceUrl.name + v4()}`);
+        const uploadTask = await uploadBytes(fileRef, invoiceUrl);
+        const snapshot = await getDownloadURL(uploadTask.ref);
+        data.invoiceUrl = snapshot;
+      }
+      if (intialData) {
+        const response = await fetch(`/api/projects/${projectId}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(passedData),
+        });
+        toast({
+          title: "Success",
+          description: "Project Details Updated Successfully!",
+        });
+      } else {
+        const response = await fetch("/api/projects", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+        toast({
+          title: "Success",
+          description: "Project Details Created Successfully!",
+        });
+      }
+      router.refresh();
+      router.push(`/dashboard/projects`);
+    } catch (error) {
+      console.log(error.message);
+      toast({
+        title: "Error",
+        description: "Something went wrong!",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
   const onDelete = async () => {
     try {
       setLoading(true);
-      const response = await fetch (`/api/projects/${projectId}`, {
+      const response = await fetch(`/api/projects/${projectId}`, {
         method: "DELETE",
       });
       const data = await response.json();
-      router.push(`/dashboard/projects`)
+      router.push(`/dashboard/projects`);
 
       toast({
-        title:'Success',
-        description:'Project Deleted Successfully!',
-      })
+        title: "Success",
+        description: "Project Deleted Successfully!",
+      });
     } catch (error) {
-      console.log(error.message)
+      console.log(error.message);
 
       toast({
-        title:'Error',
-        description:'Something went wrong!',
-        variant: 'destructive'
-      })
+        title: "Error",
+        description: "Something went wrong!",
+        variant: "destructive",
+      });
     } finally {
-         setLoading(false);
+      setLoading(false);
       setOpen(false);
     }
-
   };
 
   return (
     <>
-
       <AlertModal
         isOpen={open}
         onClose={() => setOpen(false)}
@@ -208,7 +206,6 @@ export const ProjectForm = ({ intialData }) => {
           className="space-y-8  w-full "
           onSubmit={form.handleSubmit(onSubmit)}
         >
-     
           <div className="grid grid-cols-3 gap-8">
             <FormField
               render={({ field }) => (
@@ -218,7 +215,6 @@ export const ProjectForm = ({ intialData }) => {
                     <Input
                       disabled={loading}
                       placeholder="Project Title"
-                    
                       {...field}
                     />
                   </FormControl>
@@ -233,25 +229,25 @@ export const ProjectForm = ({ intialData }) => {
                 <FormItem>
                   <FormLabel>Type</FormLabel>
                   <FormControl>
-                  <Select
-                    disabled={loading}
-                    onValueChange={field.onChange}
-                    value={field.value}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue
-                          defaultValue={field.value}
-                          placeholder="Select The Type Project"
-                        />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="LONGTERM">LONGTERM</SelectItem>
-                      <SelectItem value="JOB">JOB</SelectItem>
-                    </SelectContent>
-                  </Select>
+                    <Select
+                      disabled={loading}
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue
+                            defaultValue={field.value}
+                            placeholder="Select The Type Project"
+                          />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="LONGTERM">LONGTERM</SelectItem>
+                        <SelectItem value="JOB">JOB</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -264,27 +260,26 @@ export const ProjectForm = ({ intialData }) => {
                 <FormItem>
                   <FormLabel>Status</FormLabel>
                   <FormControl>
-                  <Select
-                    disabled={loading}
-                    onValueChange={field.onChange}
-                    value={field.value}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue
-                          defaultValue={field.value}
-                          placeholder="Select The Status"
-                        />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="PENDING">PENDING</SelectItem>
-                      <SelectItem value="ONGOING">ONGOING</SelectItem>
-                      <SelectItem value="COMPLETED">COMPLETED</SelectItem>
-
-                    </SelectContent>
-                  </Select>
+                    <Select
+                      disabled={loading}
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue
+                            defaultValue={field.value}
+                            placeholder="Select The Status"
+                          />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="PENDING">PENDING</SelectItem>
+                        <SelectItem value="ONGOING">ONGOING</SelectItem>
+                        <SelectItem value="COMPLETED">COMPLETED</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -349,12 +344,12 @@ export const ProjectForm = ({ intialData }) => {
               name="date"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel className={cn('mb-2')}>Date</FormLabel>
+                  <FormLabel className={cn("mb-2")}>Date</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
-                        disabled={loading}
+                          disabled={loading}
                           variant={"outline"}
                           className={cn(
                             " h-10 w-full pl-3 text-left font-normal",
@@ -394,7 +389,7 @@ export const ProjectForm = ({ intialData }) => {
                   <FormLabel>Total Amount</FormLabel>
                   <FormControl>
                     <Input
-                    type='number'
+                      type="number"
                       disabled={loading}
                       placeholder="Total Amount"
                       {...field}
@@ -411,21 +406,18 @@ export const ProjectForm = ({ intialData }) => {
                 <FormItem>
                   <FormLabel>Invoice Upload</FormLabel>
                   <FormControl>
-
                     <Input
                       disabled={loading}
                       placeholder="Upload your invoice"
                       type="file"
                       onChange={(e) =>
-                        field.onChange(e.target.files ? e.target.files[0] : null)
+                        field.onChange(
+                          e.target.files ? e.target.files[0] : null
+                        )
                       }
-                      // value={field.value}
-
-                
-                  
-                      />
+                    />
                   </FormControl>
-               
+
                   <FormMessage />
                 </FormItem>
               )}

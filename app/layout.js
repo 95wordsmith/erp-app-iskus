@@ -20,7 +20,7 @@ export default  function RootLayout({ children }) {
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <Providers>
-          {/* {session?.user && <Navbar />} */}
+      
           {children}
           <Toaster />
         </Providers>

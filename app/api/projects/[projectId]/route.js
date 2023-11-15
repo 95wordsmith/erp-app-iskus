@@ -35,7 +35,7 @@ try {
 export async function PATCH (req,{params}){
   const { projectId } = params;
   const {title,pinNum,type,customer,location, amountTotal, status, invoiceUrl,date } =await req.json()
-
+console.log(title,pinNum,type,customer,location, amountTotal, status, invoiceUrl,date )
   // console.log('project id',projectId)
   
 try {
