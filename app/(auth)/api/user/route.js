@@ -6,7 +6,6 @@ import { NextResponse } from "next/server";
 
 export async function POST(req) {
 
-  // console.log('requestHeaders',req.headers)
 
 
   try {

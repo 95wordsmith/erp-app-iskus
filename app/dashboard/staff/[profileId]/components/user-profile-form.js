@@ -44,7 +44,7 @@ const formSchema = z.object({
   email: z.string().email(),
   address: z.string().min(5, "Address must be at least 8 characters long"),
   phoneNumber: stringOrNumberSchema,
-  position: z.string().min(5, "Position must be at least 5 characters long"),
+  position: z.string().min(1, "Position must be at least 5 characters long"),
 });
 
 const UserProfileForm = ({ intialData }) => {

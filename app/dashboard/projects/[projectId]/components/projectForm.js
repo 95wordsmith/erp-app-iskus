@@ -102,12 +102,13 @@ export const ProjectForm = ({ intialData }) => {
   });
 
   const onSubmit = async (data) => {
+    console.log(data)
+    setLoading(true);
     const { invoiceUrl, ...restData } = data;
 
     const passedData = invoiceUrl ? data : restData;
 
     try {
-      setLoading(true);
       if (invoiceUrl) {
         const fileRef = ref(storage, `invoices/${invoiceUrl.name + v4()}`);
         const uploadTask = await uploadBytes(fileRef, invoiceUrl);

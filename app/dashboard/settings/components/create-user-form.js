@@ -43,6 +43,7 @@ const formSchema = z.object({
 });
 
 const CreateUserForm = () => {
+  const router = useRouter()
   const { toast } = useToast();
   const accessControls = useCreateUserModal();
   const form = useForm({
@@ -64,6 +65,8 @@ const CreateUserForm = () => {
         body: JSON.stringify({ username, password, role }),
       });
       accessControls.onClose();
+      router.push(`/dashboard/staff`);
+      router.refresh();
       toast({
         title: "Success",
         description: "User Created Successfully",

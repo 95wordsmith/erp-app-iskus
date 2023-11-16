@@ -2,7 +2,7 @@ import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 const ProjectAmountTotal = ({projectData}) => {
   
-  const total = projectData.map((amount)=>amount.amountTotal).reduce((acc,cur)=>acc+cur,0).toFixed(2)
+  const total = projectData.filter((data)=>data.status==='COMPLETED').map((amount)=>amount.amountTotal).reduce((acc,cur)=>acc+cur,0).toFixed(2)
 
   function formatAmountToGHC(amount) {
    

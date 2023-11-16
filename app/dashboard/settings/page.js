@@ -30,7 +30,9 @@ const SettingsPage = async () => {
     },
   });
   
-  const {profile} =id
+  // const {profile} =id
+  const { profile } = id || { profile: null };
+
 
   const profileId =profile? profile.id:null
   const {id:user} =id

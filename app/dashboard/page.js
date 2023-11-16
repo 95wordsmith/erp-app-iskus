@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { DatePickerWithRange } from "./components/date-picker";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import prisma from "@/lib/prisma";
-import { Banknote, Hash } from "lucide-react";
+import { Banknote, Hash, RefreshCcw } from "lucide-react";
 import Barchart from "./components/barChart";
 import { getGraphRevenue } from "@/actions/getGraphRevenue";
 import { Heading } from "@/components/ui/heading";
@@ -13,7 +13,10 @@ import PieChart from "./components/pieChart";
 import PieChartLayout from "./components/pieChart";
 import getTypeData from "@/actions/getTypeData";
 
+import RefreshButton from "./components/refresh";
+
 const DashboadPage = async ({ searchParams }) => {
+  // throw new Error('mistake')
   const session = await getServerSession(authOptions);
 
   if (!session?.user) {
@@ -25,6 +28,7 @@ const DashboadPage = async ({ searchParams }) => {
 
   const { graphData, totalRevenue } = await getGraphRevenue(start, end);
   const { longTermRevenue, longTermNumber, jobRevenue, jobNumber } = await getTypeData(start, end);
+
 
   const totalNumber = longTermNumber&& jobNumber? longTermNumber+jobNumber:0
 
@@ -43,11 +47,7 @@ const DashboadPage = async ({ searchParams }) => {
       status: "COMPLETED",
     },
   });
-  const color = {
-    green: "#3EBB28",
-    yellow: "#E3E540",
-    blue: "#325DDA",
-  };
+
   const status = [
     { name: "PENDING", value: pending, color: "#E3E540" },
     { name: "ONGOING", value: ongoing, color: "#325DDA" },
@@ -63,7 +63,8 @@ const DashboadPage = async ({ searchParams }) => {
         />
         <DatePickerWithRange />
       </div>
-      <div className="grid grid-cols-3 mt-7 gap-10 ">
+    <RefreshButton/>
+      <div className="grid grid-cols-3 mt-2 gap-10 ">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
@@ -71,7 +72,7 @@ const DashboadPage = async ({ searchParams }) => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {formattedCurrency(totalRevenue)}
+              {totalRevenue? formattedCurrency(totalRevenue):0}
             </div>
           </CardContent>
           <CardHeader className="flex mt-[-30px] flex-row items-center justify-between space-y-0 pb-2">
@@ -80,7 +81,7 @@ const DashboadPage = async ({ searchParams }) => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {formattedCurrency(jobRevenue)}
+              {jobRevenue? formattedCurrency(jobRevenue):0}
             </div>
           </CardContent>
           <CardHeader className="flex mt-[-30px] flex-row items-center justify-between space-y-0 pb-2">
@@ -89,7 +90,7 @@ const DashboadPage = async ({ searchParams }) => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {formattedCurrency(longTermRevenue)}
+              { longTermRevenue? formattedCurrency(longTermRevenue):0}
             </div>
           </CardContent>
         </Card>
@@ -101,7 +102,7 @@ const DashboadPage = async ({ searchParams }) => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {totalNumber}
+              {totalNumber?totalNumber:0}
             </div>
           </CardContent>
           <CardHeader className="flex mt-[-30px] flex-row items-center justify-between space-y-0 pb-2">
@@ -109,14 +110,14 @@ const DashboadPage = async ({ searchParams }) => {
             <Hash className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{jobNumber}</div>
+            <div className="text-2xl font-bold">{jobNumber?jobNumber:0}</div>
           </CardContent>
           <CardHeader className="flex mt-[-30px] flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Projects</CardTitle>
             <Hash className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{longTermNumber}</div>
+            <div className="text-2xl font-bold">{longTermNumber?longTermNumber:0}</div>
           </CardContent>
         </Card>
 
