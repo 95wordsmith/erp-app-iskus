@@ -29,7 +29,7 @@ export function DatePickerWithRange({
     if (date && date.from && date.to) {
       router.push(`?start=${date.from}&end=${date.to}`);
     }
-  }, [date]);
+  }, [date,router]);
   
   return (
     <div className={cn("grid gap-2", className)}>
