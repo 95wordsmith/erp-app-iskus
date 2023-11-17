@@ -1,48 +1,36 @@
-import prisma from "@/lib/prisma"
-import { NextResponse } from "next/server"
+import prisma from "@/lib/prisma";
+import { NextResponse } from "next/server";
 
+export async function POST(res) {
+  const {
+    title,
+    pinNum,
+    type,
+    customer,
+    location,
+    amountTotal,
+    status,
+    invoiceUrl,
+    date,
+  } = await res.json();
 
+  try {
+    const projectData = await prisma.projects.create({
+      data: {
+        title,
+        pinNum,
+        type,
+        customer,
+        location,
+        amountTotal: Number(amountTotal),
+        status,
+        invoiceUrl,
+        date,
+      },
+    });
 
-export async function POST (res){
-// const data = await res.json()
-// console.log(data)
-  const {title,pinNum,type,customer,location, amountTotal, status, invoiceUrl,date } =await res.json()
-// console.log(title,pinNum,type,customer,location, amountTotal, status, invoiceUrl)
-try {
-  const projectData = await prisma.projects.create({
-         data:{
-          title,
-          pinNum,
-          type,
-          customer,
-          location,
-          amountTotal:Number(amountTotal),
-          status,
-          invoiceUrl,
-          date  
-         } 
-  })
-
- return  NextResponse.json(projectData,{status:201})
-  
-} catch (error) {
-  console.log(error)
-}
-}
-
-export async function GET (req){
-
-  const projectData = await prisma.projects.findMany({
-    select : {
-      id : true,
-      title :true,
-      type:true,
-      customer:true,
-      status:true,
-      amountTotal:true,
-      date:true
-    }
-  })
-  return  NextResponse.json(projectData,{status:200})
-
+    return NextResponse.json(projectData, { status: 201 });
+  } catch (error) {
+    console.log(error);
+  }
 }

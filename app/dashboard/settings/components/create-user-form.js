@@ -25,6 +25,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
+import { useState } from "react";
 
 const roleOptions = ["SUPERADMIN", "ADMIN"];
 const formSchema = z.object({
@@ -43,6 +44,7 @@ const formSchema = z.object({
 });
 
 const CreateUserForm = () => {
+  const [loading,setIsLoading] =useState(false)
   const router = useRouter()
   const { toast } = useToast();
   const accessControls = useCreateUserModal();
@@ -57,7 +59,7 @@ const CreateUserForm = () => {
 
   const onSubmit = async (values) => {
     const { username, password, role } = values;
-
+    setIsLoading(true)
     try {
       const response = await fetch("/api/user", {
         method: "POST",
@@ -78,6 +80,8 @@ const CreateUserForm = () => {
         description: "Wrong Username or Password",
         variant: "destructive",
       });
+    }finally{
+      setIsLoading(false)
     }
   };
 
@@ -95,7 +99,7 @@ const CreateUserForm = () => {
               <FormItem>
                 <FormLabel>Username</FormLabel>
                 <FormControl>
-                  <Input placeholder="username" {...field} />
+                  <Input disabled={loading} placeholder="username" {...field} />
                 </FormControl>
 
                 <FormMessage />
@@ -109,7 +113,7 @@ const CreateUserForm = () => {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input type="password" placeholder="password" {...field} />
+                  <Input  disabled={loading} type="password" placeholder="password" {...field} />
                 </FormControl>
 
                 <FormMessage />
@@ -125,7 +129,7 @@ const CreateUserForm = () => {
                 <FormLabel>Role</FormLabel>
                 <FormControl>
                   <Select
-                    // disabled={loading}
+                    disabled={loading}
                     onValueChange={field.onChange}
                     value={field.value}
                     defaultValue={field.value}
@@ -148,7 +152,7 @@ const CreateUserForm = () => {
               </FormItem>
             )}
           />
-          <Button className="mt-4" type="submit">
+          <Button  disabled={loading} className="mt-4" type="submit">
             Create
           </Button>
         </form>

@@ -46,20 +46,6 @@ export const CellAction = ({ data }) => {
         variant: 'destructive'
       })
     }
-    // try {
-    //   setLoading(true);
-    //   await axios.delete(`/api/${params.storeId}/products/${data.id}`);
-    //   router.refresh();
-    //   router.push(`/${params.storeId}/products`)
-    //   toast.success("Product deleted.");
-    // } catch (error) {
-    //   toast.error(
-    //     "Something went wrong."
-    //   );
-    // } finally {
-    //   setLoading(false);
-    //   setOpen(false);
-    // }
   };
   const onDownload =()=>{
     const {invoiceUrl} =data

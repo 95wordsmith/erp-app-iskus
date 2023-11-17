@@ -31,7 +31,7 @@ export const getGraphRevenue = async (start, end) => {
   }
 
   const graphData = [];
-  let hasNonZeroValue = false; // Track if there's any non-zero value
+  let hasNonZeroValue = false; 
 
   for (const key in monthlyRevenue) {
     const [year, month] = key.split('-');

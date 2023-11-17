@@ -29,13 +29,3 @@ export function convertData(data) {
 }
 
 
-const getStaffData = async () => {
-
-  const res = await fetch('/api/profile')
-  const resData = await res.json()
-  const {profileData}=resData
-  return convertData(profileData);
- 
-};
-
-export default getStaffData;

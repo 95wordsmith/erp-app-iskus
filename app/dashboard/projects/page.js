@@ -4,21 +4,7 @@ import { ProjectClient } from "./components/client";
 import ProjectHeader from "./components/projectHeader";
 
 const ProjectsPage = async () => {
-  const projectData = await prisma.projects.findMany(
-  //   {
-  //   select: {
-  //     id: true,
-  //     title: true,
-  //     type: true,
-  //     customer: true,
-  //     pinNum:true,
-  //     location:true,
-  //     status: true,
-  //     amountTotal: true,
-  //     createdAt: true,
-  //   },
-  // }
-  );
+  const projectData = await prisma.projects.findMany();
 
   return (
     <>
