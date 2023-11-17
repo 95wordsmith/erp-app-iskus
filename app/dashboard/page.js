@@ -4,19 +4,19 @@ import { redirect } from "next/navigation";
 import { DatePickerWithRange } from "./components/date-picker";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import prisma from "@/lib/prisma";
-import { Banknote, Hash, RefreshCcw } from "lucide-react";
+import { Banknote, Hash } from "lucide-react";
 import Barchart from "./components/barChart";
 import { getGraphRevenue } from "@/actions/getGraphRevenue";
 import { Heading } from "@/components/ui/heading";
-import { cn, formattedCurrency } from "@/lib/utils";
-import PieChart from "./components/pieChart";
+import { formattedCurrency } from "@/lib/utils";
+
 import PieChartLayout from "./components/pieChart";
 import getTypeData from "@/actions/getTypeData";
 
 import RefreshButton from "./components/refresh";
 
 const DashboadPage = async ({ searchParams }) => {
-  // throw new Error('mistake')
+
   const session = await getServerSession(authOptions);
 
   if (!session?.user) {

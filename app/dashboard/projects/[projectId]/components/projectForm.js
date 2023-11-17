@@ -102,7 +102,7 @@ export const ProjectForm = ({ intialData }) => {
   });
 
   const onSubmit = async (data) => {
-    console.log(data)
+   
     setLoading(true);
     const { invoiceUrl, ...restData } = data;
 
