@@ -14,7 +14,7 @@ import PieChartLayout from "./components/pieChart";
 import getTypeData from "@/actions/getTypeData";
 
 import RefreshButton from "./components/refresh";
-
+export const revalidate =0
 const DashboadPage = async ({ searchParams }) => {
 
   const session = await getServerSession(authOptions);

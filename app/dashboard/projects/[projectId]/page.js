@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { ProjectForm } from "./components/projectForm";
+export const revalidate =0
 const projectCreateOrUpdate = async ({ params }) => {
   const { projectId } = params;
   const projectData = await prisma.projects.findUnique({

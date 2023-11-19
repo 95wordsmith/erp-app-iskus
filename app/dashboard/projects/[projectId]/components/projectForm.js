@@ -116,7 +116,7 @@ export const ProjectForm = ({ intialData }) => {
         data.invoiceUrl = snapshot;
       }
       if (intialData) {
-        const response = await fetch(`/api/projects/${projectId}`, {
+        const response = await fetch(`/api/projects/${projectId}`,{cache:'no-store'} ,{
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
@@ -128,7 +128,7 @@ export const ProjectForm = ({ intialData }) => {
           description: "Project Details Updated Successfully!",
         });
       } else {
-        const response = await fetch("/api/projects", {
+        const response = await fetch("/api/projects/", {cache:'no-store'} ,{
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -156,7 +156,7 @@ export const ProjectForm = ({ intialData }) => {
   const onDelete = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/projects/${projectId}`, {
+      const response = await fetch(`/api/projects/${projectId}/`,{cache:'no-store'} , {
         method: "DELETE",
       });
       const data = await response.json();

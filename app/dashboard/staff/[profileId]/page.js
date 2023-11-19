@@ -1,19 +1,9 @@
-// import StaffProfile from "./components/user-profile";
-// const ProfileDetails = () => {
 
-//   return (
-//     <>
-//     <StaffProfile/>
-//     </>
-//    );
-// }
-// export default ProfileDetails;
-import { convertData } from "@/actions/getStaffData";
 import prisma from "@/lib/prisma";
 import UserProfileForm from "./components/user-profile-form";
-// import { ProjectForm } from "./components/projectForm";
 
 
+export const revalidate =0
 const StaffCreateOrUpdate = async ({ params }) => {
   const { profileId } = params;
   const profileData = await prisma.profile.findUnique({

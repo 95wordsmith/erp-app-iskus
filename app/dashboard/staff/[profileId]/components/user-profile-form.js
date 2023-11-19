@@ -81,7 +81,7 @@ const UserProfileForm = ({ intialData }) => {
     try {
       setLoading(true);
       if (intialData) {
-        const response = await fetch(`/api/profile/${profileId}`, {
+        const response = await fetch(`/api/profile/${profileId}/`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
@@ -100,7 +100,7 @@ const UserProfileForm = ({ intialData }) => {
           description: "Profile Details Updated Successfully!",
         });
       } else {
-        const response = await fetch(`/api/profile/${profileId}`, {
+        const response = await fetch(`/api/profile/${profileId}/`,{cache:'no-store'} , {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -135,7 +135,7 @@ const UserProfileForm = ({ intialData }) => {
   const onDelete = async () => {
     try {
       setLoading(true);
-      const response = await fetch (`/api/profile/${profileId}`, {
+      const response = await fetch (`/api/profile/${profileId}/`,{cache:'no-store'} , {
         method: "DELETE",
       });
       const data = await response.json();

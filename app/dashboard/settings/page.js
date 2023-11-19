@@ -8,7 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { User, UserCog2 } from "lucide-react";
 import Link from "next/link";
-
+export const revalidate =0
 const SettingsPage = async () => {
   const session = await getServerSession(authOptions);
   const userId = session.user.id;

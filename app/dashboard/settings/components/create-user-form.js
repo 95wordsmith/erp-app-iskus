@@ -61,7 +61,7 @@ const CreateUserForm = () => {
     const { username, password, role } = values;
     setIsLoading(true)
     try {
-      const response = await fetch("/api/user", {
+      const response = await fetch("/api/user/", {
         method: "POST",
         "Content-Type": "application/json",
         body: JSON.stringify({ username, password, role }),

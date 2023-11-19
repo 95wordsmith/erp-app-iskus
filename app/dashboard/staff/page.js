@@ -2,7 +2,7 @@ import prisma from "@/lib/prisma";
 
 import { StaffClient } from "./components/client";
 import { convertData } from "@/actions/getStaffData";
-
+export const revalidate =0
 const StaffPage = async () => {
   const profileData = await prisma.user.findMany({
     select:{

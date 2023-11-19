@@ -1,11 +1,10 @@
 
-import SignOutButton from "@/components/SignoutButton";
-import { Button } from "@/components/ui/button";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import { redirect, useRouter } from "next/navigation";
 
 
+export const revalidate =0
 
 const Homepage = async () => {
 
