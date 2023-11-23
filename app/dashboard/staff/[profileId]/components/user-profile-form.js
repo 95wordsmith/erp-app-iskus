@@ -1,18 +1,12 @@
 "use client";
 import { useParams } from "next/navigation";
 import { useState } from "react";
-import { CalendarIcon } from "@radix-ui/react-icons";
-import { format } from "date-fns";
-import { Calendar } from "@/components/ui/calendar";
-import { Trash, Upload } from "lucide-react";
+
+import { Trash } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { AlertModal } from "@/components/ui/modals/alert-modal";
 import { Heading } from "@/components/ui/heading";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+
 import {
   Form,
   FormControl,
@@ -100,7 +94,7 @@ const UserProfileForm = ({ intialData }) => {
           description: "Profile Details Updated Successfully!",
         });
       } else {
-        const response = await fetch(`/api/profile/${profileId}/`,{cache:'no-store'} , {
+        const response = await fetch(`/api/profile/${profileId}/` , {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -135,7 +129,7 @@ const UserProfileForm = ({ intialData }) => {
   const onDelete = async () => {
     try {
       setLoading(true);
-      const response = await fetch (`/api/profile/${profileId}/`,{cache:'no-store'} , {
+      const response = await fetch (`/api/profile/${profileId}/` , {
         method: "DELETE",
       });
       const data = await response.json();

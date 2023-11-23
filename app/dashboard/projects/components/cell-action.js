@@ -34,10 +34,7 @@ export const CellAction = ({ data }) => {
         title:'Success!',
         description:'Project deleted successfully!'
       })
-      setTimeout(() => {
-        window.location.reload()
-        
-      }, 1000);
+      router.refresh()
     } catch (error) {
       console.log(error.message)
       toast({

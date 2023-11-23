@@ -12,12 +12,11 @@ export async function DELETE(req, { params }) {
     });
 
     return NextResponse.json(
-      { message: "User deleted successfully" },
-      { status: 200 }
+      {deletedUser:deleteUser ,message: "User deleted successfully" }
     );
   } catch (error) {
     console.error(error.message);
-    return NextResponse.json(
+    return new NextResponse.json(
       { message: "Something went wrong!" },
       { status: 500 }
     );

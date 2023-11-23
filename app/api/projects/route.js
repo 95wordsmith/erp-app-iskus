@@ -2,19 +2,19 @@ import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
 export async function POST(res) {
-  const {
-    title,
-    pinNum,
-    type,
-    customer,
-    location,
-    amountTotal,
-    status,
-    invoiceUrl,
-    date,
-  } = await res.json();
-
+  
   try {
+    const {
+      title,
+      pinNum,
+      type,
+      customer,
+      location,
+      amountTotal,
+      status,
+      invoiceUrl,
+      date,
+    } = await res.json();
     const projectData = await prisma.projects.create({
       data: {
         title,
@@ -29,8 +29,9 @@ export async function POST(res) {
       },
     });
 
-    return NextResponse.json(projectData, { status: 201 });
+    return NextResponse.json({projectData});
   } catch (error) {
     console.log(error);
+    return new NextResponse("Internal error", { status: 500 });
   }
 }

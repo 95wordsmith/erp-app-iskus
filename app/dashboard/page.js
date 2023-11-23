@@ -14,9 +14,8 @@ import PieChartLayout from "./components/pieChart";
 import getTypeData from "@/actions/getTypeData";
 
 import RefreshButton from "./components/refresh";
-export const revalidate =0
+export const revalidate = 0;
 const DashboadPage = async ({ searchParams }) => {
-
   const session = await getServerSession(authOptions);
 
   if (!session?.user) {
@@ -27,10 +26,11 @@ const DashboadPage = async ({ searchParams }) => {
   const end = searchParams.end;
 
   const { graphData, totalRevenue } = await getGraphRevenue(start, end);
-  const { longTermRevenue, longTermNumber, jobRevenue, jobNumber } = await getTypeData(start, end);
+  const { longTermRevenue, longTermNumber, jobRevenue, jobNumber } =
+    await getTypeData(start, end);
 
-
-  const totalNumber = longTermNumber&& jobNumber? longTermNumber+jobNumber:0
+  const totalNumber =
+    longTermNumber && jobNumber ? longTermNumber + jobNumber : 0;
 
   const ongoing = await prisma.projects.count({
     where: {
@@ -63,7 +63,7 @@ const DashboadPage = async ({ searchParams }) => {
         />
         <DatePickerWithRange />
       </div>
-    <RefreshButton/>
+      <RefreshButton />
       <div className="grid grid-cols-3 mt-2 gap-10 ">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -72,7 +72,7 @@ const DashboadPage = async ({ searchParams }) => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {totalRevenue? formattedCurrency(totalRevenue):0}
+              {totalRevenue ? formattedCurrency(totalRevenue) : 0}
             </div>
           </CardContent>
           <CardHeader className="flex mt-[-30px] flex-row items-center justify-between space-y-0 pb-2">
@@ -81,7 +81,7 @@ const DashboadPage = async ({ searchParams }) => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {jobRevenue? formattedCurrency(jobRevenue):0}
+              {jobRevenue ? formattedCurrency(jobRevenue) : 0}
             </div>
           </CardContent>
           <CardHeader className="flex mt-[-30px] flex-row items-center justify-between space-y-0 pb-2">
@@ -90,7 +90,7 @@ const DashboadPage = async ({ searchParams }) => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              { longTermRevenue? formattedCurrency(longTermRevenue):0}
+              {longTermRevenue ? formattedCurrency(longTermRevenue) : 0}
             </div>
           </CardContent>
         </Card>
@@ -102,7 +102,7 @@ const DashboadPage = async ({ searchParams }) => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {totalNumber?totalNumber:0}
+              {totalNumber ? totalNumber : 0}
             </div>
           </CardContent>
           <CardHeader className="flex mt-[-30px] flex-row items-center justify-between space-y-0 pb-2">
@@ -110,14 +110,18 @@ const DashboadPage = async ({ searchParams }) => {
             <Hash className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{jobNumber?jobNumber:0}</div>
+            <div className="text-2xl font-bold">
+              {jobNumber ? jobNumber : 0}
+            </div>
           </CardContent>
           <CardHeader className="flex mt-[-30px] flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Projects</CardTitle>
             <Hash className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{longTermNumber?longTermNumber:0}</div>
+            <div className="text-2xl font-bold">
+              {longTermNumber ? longTermNumber : 0}
+            </div>
           </CardContent>
         </Card>
 

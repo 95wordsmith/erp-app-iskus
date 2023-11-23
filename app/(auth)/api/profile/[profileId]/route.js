@@ -3,11 +3,11 @@ import { NextResponse } from "next/server";
 
 
 export async function POST(req, { params }) {
-  const { profileId } = params;
-  const body = await req.json();
-  const { fullName, email, phoneNumber, address, position } = body;
-
+  
   try {
+    const { profileId } = params;
+    const body = await req.json();
+    const { fullName, email, phoneNumber, address, position } = body;
     const addProfileDetails = await prisma.user.update({
       where: { id: profileId },
       data: {
@@ -24,11 +24,9 @@ export async function POST(req, { params }) {
     });
 
     return NextResponse.json(
-      { addProfileDetails, message: "Profile created successfully" },
-      { status: 201 }
-    );
+      { profileDetails:addProfileDetails, message: "Profile created successfully" },);
   } catch (error) {
-    console.error(error.message);
+    console.error(error);
     return NextResponse.json(
       { message: "Something went wrong!" },
       { status: 500 }
@@ -37,12 +35,12 @@ export async function POST(req, { params }) {
 }
 
 export async function PATCH(req, { params }) {
-  const { profileId } = params;
-
-  const body = await req.json();
-
-  const { fullName, email, phoneNumber, address, position } = body;
   try {
+    const { profileId } = params;
+  
+    const body = await req.json();
+  
+    const { fullName, email, phoneNumber, address, position } = body;
     const updateProfileDetails = await prisma.profile.update({
       where: {
         id: profileId,
@@ -56,12 +54,11 @@ export async function PATCH(req, { params }) {
       },
     });
     return NextResponse.json(
-      { updateProfileDetails, message: "Profile updated successfully" },
-      { status: 200 }
+      { updatedProfileDetails:updateProfileDetails, message: "Profile updated successfully" }
     );
   } catch (error) {
-    console.log(error.message);
-    return NextResponse.json(
+    console.log(error);
+    return new NextResponse.json(
       { message: "Something went wrong!" },
       { status: 500 }
     );
