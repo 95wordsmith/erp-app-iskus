@@ -1,10 +1,9 @@
 import { NextResponse } from "next/server";
 
-export async function PATCH(req, { params }) {
-  
-  
+export async function PATCH(req, { params }) {   
   try {
     const { projectId } = params;
+    const body = await req.json()
     const {
       title,
       pinNum,
@@ -15,7 +14,9 @@ export async function PATCH(req, { params }) {
       status,
       invoiceUrl,
       date,
-    } = await req.json();
+    } = body;
+
+
     const projectData = await prisma.projects.update({
       where: {
         id: projectId,
@@ -32,7 +33,8 @@ export async function PATCH(req, { params }) {
         date,
       },
     });
-    return NextResponse.json({projectData});
+
+    return NextResponse.json(projectData);
   } catch (error) {
     console.log(error);
     return new NextResponse.json(
@@ -52,10 +54,7 @@ export async function DELETE(req, { params }) {
       },
     });
 
-    return NextResponse.json(
-      {deletedUser:deleteUser,  message: "Project deleted successfully" },
-   
-    );
+    return NextResponse.json(deleteUser);
   } catch (error) {
     console.error(error.message);
     return new NextResponse.json(

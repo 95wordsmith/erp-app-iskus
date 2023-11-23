@@ -116,7 +116,7 @@ export const ProjectForm = ({ intialData }) => {
         data.invoiceUrl = snapshot;
       }
       if (intialData) {
-        const response = await fetch(`/api/projects/${projectId}` ,{
+        const response = await fetch(`/api/projects/${projectId}`,{
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
