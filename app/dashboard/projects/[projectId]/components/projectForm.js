@@ -1,5 +1,6 @@
 "use client";
 import { storage } from "@/lib/firebase";
+import axios from "axios";
 import { v4 } from "uuid";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import * as z from "zod";
@@ -116,13 +117,14 @@ export const ProjectForm = ({ intialData }) => {
         data.invoiceUrl = snapshot;
       }
       if (intialData) {
-        const response = await fetch(`/api/projects/${projectId}`,{
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(passedData),
-        });
+        // const response = await fetch(`/api/projects/${projectId}`,{
+        //   method: "PATCH",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //   },
+        //   body: JSON.stringify(passedData),
+        // });
+       await axios.patch(`/api/projects/${projectId}`,passedData)
         toast({
           title: "Success",
           description: "Project Details Updated Successfully!",
@@ -156,10 +158,10 @@ export const ProjectForm = ({ intialData }) => {
   const onDelete = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/projects/${projectId}/`, {
-        method: "DELETE",
-      });
-      const data = await response.json();
+      // const response = await fetch(`/api/projects/${projectId}/`, {
+      //   method: "DELETE",
+      // });
+      await axios.delete(`/api/projects/${projectId}/`)
       router.push(`/dashboard/projects`);
 
       toast({
