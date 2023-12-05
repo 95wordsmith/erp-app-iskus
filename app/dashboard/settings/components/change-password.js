@@ -7,9 +7,10 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { PlusSquare, User } from "lucide-react";
 import { cn } from "@/lib/utils";
+import ChangePasswordForm from "./change-password-form";
 
 
-const CreateUser = () => {
+const ChangePassword = () => {
   const {data:session}= useSession()
   const role = session?.user?.role === 'ADMIN'
   const router = useRouter()
@@ -29,8 +30,8 @@ const CreateUser = () => {
       <User/>
       <PlusSquare/>
     </Button>
-    <Modal title='User Access Login Credentials' description='Create access login credentials for staff and define thier levels of access' isOpen={accessControls.isOpen} onClose={accessControls.onClose}>
-      <CreateUserForm/>
+    <Modal title='Change Password' description='Verify your old password and add a new one.' isOpen={accessControls.isOpen} onClose={accessControls.onClose}>
+      <ChangePasswordForm/>
     </Modal>
     </>
    );
@@ -39,4 +40,4 @@ const CreateUser = () => {
 
  
 
-export default CreateUser;
+export default ChangePassword;

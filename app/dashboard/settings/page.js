@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { User, UserCog2 } from "lucide-react";
 import Link from "next/link";
+import ChangePassword from "./components/change-password";
 export const revalidate =0
 const SettingsPage = async () => {
   const session = await getServerSession(authOptions);
@@ -63,6 +64,11 @@ const SettingsPage = async () => {
           <User/>    
           </Link>}
         </Button>
+      </div>
+      <Separator />
+      <div className="px-10 py-4">
+        <h1 className="text-xl font-bold pb-2 underline underline-offset-4">Change Password</h1>
+        <ChangePassword/>
       </div>
       <Separator />
 
