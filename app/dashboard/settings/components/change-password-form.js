@@ -1,14 +1,5 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { useCreateUserModal } from "@/hooks/useCreateUserModal";
-
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   Form,
   FormControl,
@@ -24,6 +15,7 @@ import * as z from "zod";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import { useState } from "react";
+import { useChangePasswordModal } from "@/hooks/useChangePasswordModal";
 
 const formSchema = z.object({
   oldPassword: z.string().min(8, "Password must be at least 8 characters long"),
@@ -38,7 +30,7 @@ const formSchema = z.object({
 const ChangePasswordForm = () => {
   const [loading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  const accessControls = useCreateUserModal();
+  const accessControls = useChangePasswordModal();
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -50,12 +42,18 @@ const ChangePasswordForm = () => {
   const onSubmit = async (values) => {
     const { oldPassword, newPassword } = values;
 
+    const trimmedOldPassword = oldPassword.trim();
+    const trimmedNewPassword = newPassword.trim();
+
     setIsLoading(true);
     try {
       const response = await fetch("/api/change-password/", {
         method: "PATCH",
         "Content-Type": "application/json",
-        body: JSON.stringify({ oldPassword, newPassword }),
+        body: JSON.stringify({
+          oldPassword: trimmedOldPassword,
+          newPassword: trimmedNewPassword,
+        }),
       });
       if (response.ok) {
         accessControls.onClose();
@@ -64,7 +62,7 @@ const ChangePasswordForm = () => {
           title: "Success",
           description: "Password Changed Successfully",
         });
-      }else{
+      } else {
         toast({
           title: "Error",
           description: "Password does not match!",

@@ -2,26 +2,19 @@
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import { useCreateUserModal } from "@/hooks/useCreateUserModal";
-import CreateUserForm from "./create-user-form";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 import { PlusSquare, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import ChangePasswordForm from "./change-password-form";
+import { useChangePasswordModal } from "@/hooks/useChangePasswordModal";
 
 
 const ChangePassword = () => {
-  const {data:session}= useSession()
-  const role = session?.user?.role === 'ADMIN'
-  const router = useRouter()
 
-  const accessControls = useCreateUserModal()
+  const accessControls = useChangePasswordModal()
+
   const openModal =()=>{
-   if(role){
-    router.push('/access')
-   }else{
      accessControls.onOpen();
-  }
   }
   
   return ( 

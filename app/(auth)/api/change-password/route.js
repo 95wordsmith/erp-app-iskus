@@ -20,7 +20,7 @@ export async function PATCH(req) {
 
     const passwordMatch = await compare(oldPassword, existingUser.password);
     if (!passwordMatch) {
-      return NextResponse.json("Passwords Do Not Match", { status: 404 });
+      return NextResponse.json("Passwords Do Not Match", { status: 401 });
     }
     const hashedPassword = await hash(newPassword, 10);
     const changedPassword = await prisma.user.update({

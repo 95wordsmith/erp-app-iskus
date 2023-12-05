@@ -18,7 +18,6 @@ import * as z from "zod";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 
-
 const formSchema = z.object({
   username: z.string().min(2, {
     message: "Username must be at least 2 characters.",
@@ -29,11 +28,10 @@ const formSchema = z.object({
     .refine((value) => /[A-Z]/.test(value), {
       message: "Password must include at least one uppercase letter",
     }),
-
 });
 
 const LoginForm = () => {
-  const {toast} = useToast()
+  const { toast } = useToast();
   const router = useRouter();
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -46,25 +44,28 @@ const LoginForm = () => {
   const onSubmit = async (values) => {
     const { username, password } = values;
 
+    const trimmedUsername = username.trim();
+    const trimmedPassword = password.trim();
+
     const loginData = await signIn("credentials", {
-      username: username,
-      password: password,
+      username: trimmedUsername,
+      password: trimmedPassword,
       redirect: false,
-      callbackUrl:'/auth/login'
+      callbackUrl: "/auth/login",
     });
- 
+
     if (loginData?.error) {
       console.log(loginData.error);
       toast({
-        title:'Error',
-        description:'Wrong Username or Password',
-        variant: 'destructive'
-      })
+        title: "Error",
+        description: "Wrong Username or Password",
+        variant: "destructive",
+      });
     } else {
       toast({
-        title:'Success!',
-        description:'You have logged in successfully'
-      })
+        title: "Success!",
+        description: "You have logged in successfully",
+      });
       router.push("/");
     }
   };
@@ -105,7 +106,6 @@ const LoginForm = () => {
             )}
           />
 
-      
           <Button className="mt-4" type="submit">
             Login
           </Button>

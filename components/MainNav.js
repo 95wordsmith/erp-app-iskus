@@ -20,11 +20,6 @@ export default function MainNav({
       active: pathname === `/dashboard/projects`,
     },
     {
-      href: `/dashboard/inventory`,
-      label: 'Inventory',
-      active: pathname === `/dashboard/inventory`,
-    },
-    {
       href: `/dashboard/staff`,
       label: 'Staff',
       active: pathname === `/dashboard/staff`,
@@ -38,7 +33,7 @@ export default function MainNav({
     
   ];
   return (
-    <nav className={cn("flex items-center gap-4 space-x-4 lg:space-x-6", className)}>
+    <nav className={cn("flex items-center gap-6 lg:gap-12 space-x-4 lg:space-x-6", className)}>
       {routes.map((route) => (
         <Link
           key={route.href}

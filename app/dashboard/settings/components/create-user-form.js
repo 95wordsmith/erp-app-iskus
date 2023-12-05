@@ -57,12 +57,17 @@ const CreateUserForm = () => {
 
   const onSubmit = async (values) => {
     const { username, password, role } = values;
+    const trimmedUsername=username.trim()
+    const trimmedPassword = password.trim()
+   
+
+    console.log(trimmedUsername,trimmedPassword,role)
     setIsLoading(true)
     try {
       const response = await fetch("/api/user/", {
         method: "POST",
         "Content-Type": "application/json",
-        body: JSON.stringify({ username, password, role }),
+        body: JSON.stringify({ username:trimmedUsername, password:trimmedPassword, role }),
       });
       accessControls.onClose();
       router.push(`/dashboard/staff`);
