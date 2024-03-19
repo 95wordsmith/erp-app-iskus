@@ -55,8 +55,8 @@ const DashboadPage = async ({ searchParams }) => {
   ];
 
   return (
-    <div className="px-16 py-8 ">
-      <div className="flex justify-between border-b-2">
+    <div className=" px-6 md:px-10 lg:px-16 py-8 ">
+      <div className=" sm:flex justify-between pb-3  border-b-2">
         <Heading
           title="Dashboard"
           description="Overview of your Company per date range."
@@ -64,7 +64,7 @@ const DashboadPage = async ({ searchParams }) => {
         <DatePickerWithRange />
       </div>
       <RefreshButton />
-      <div className="grid grid-cols-3 mt-2 gap-10 ">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-2 gap-10 ">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
@@ -129,7 +129,7 @@ const DashboadPage = async ({ searchParams }) => {
           <PieChartLayout data={status} />
         </div>
       </div>
-      <div className="container my-6">
+      <div className="my-6">
         <Barchart data={graphData} />
       </div>
     </div>

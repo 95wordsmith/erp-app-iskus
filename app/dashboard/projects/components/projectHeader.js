@@ -5,7 +5,7 @@ import ProjectTotal from "./projectTotal";
 
 const ProjectHeader = ({projectData}) => {
   return (
-<div className="flex gap-8 justify-evenly">
+<div className="flex gap-8 justify-evenly flex-wrap">
 <ProjectTotal projectData={projectData}/>
 <ProjectStatus projectData={projectData}/>
 <ProjectAmountTotal projectData={projectData}/>

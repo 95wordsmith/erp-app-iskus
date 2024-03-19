@@ -1,7 +1,7 @@
 "use client";
 import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
-
+import { useSearchParams } from "next/navigation";
 import {
   Form,
   FormControl,
@@ -17,6 +17,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
+import { useEffect } from "react";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -31,11 +32,20 @@ const formSchema = z.object({
 });
 
 const LoginForm = () => {
+const searchParams = useSearchParams()
+
+  const initalData ={
+    username: searchParams.get('username'),
+    password: searchParams.get("password")
+  }
+  
+
+
   const { toast } = useToast();
   const router = useRouter();
   const form = useForm({
     resolver: zodResolver(formSchema),
-    defaultValues: {
+    defaultValues: initalData.username?initalData:{
       username: "",
       password: "",
     },

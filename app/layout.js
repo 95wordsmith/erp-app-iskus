@@ -11,6 +11,9 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata = {
   title: "Iskus Power Ltd",
   description: "Admin application for staff",
+  icons:{
+    icon:'/favicon1.ico'
+  }
 };
 
 export default  function RootLayout({ children }) {

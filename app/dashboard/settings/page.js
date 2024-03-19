@@ -42,7 +42,7 @@ const SettingsPage = async () => {
 
   return (
     <>
-      <div className="flex items-center justify-between px-10 py-6">
+      <div className="sm:flex  items-center justify-between px-10 py-6">
         <Heading title="Settings" description="Manage your user settings" />
         <Heading title={username} description={role} />
       </div>

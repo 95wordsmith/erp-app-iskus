@@ -61,7 +61,7 @@ const CreateUserForm = () => {
     const trimmedPassword = password.trim()
    
 
-    console.log(trimmedUsername,trimmedPassword,role)
+    // console.log(trimmedUsername,trimmedPassword,role)
     setIsLoading(true)
     try {
       const response = await fetch("/api/user/", {
