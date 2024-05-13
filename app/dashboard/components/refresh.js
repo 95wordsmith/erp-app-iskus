@@ -1,6 +1,5 @@
 'use client'
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
 import { RefreshCcw } from "lucide-react";
 import {
   Tooltip,
@@ -13,7 +12,6 @@ const RefreshButton = () => {
   const refresh =()=>{
       window.location.reload()
   }
-  const router = useRouter()
   return ( 
     <TooltipProvider>
     <Tooltip>

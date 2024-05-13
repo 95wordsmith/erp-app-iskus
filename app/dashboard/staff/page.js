@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 
 import { StaffClient } from "./components/client";
 import { convertData } from "@/actions/getStaffData";
+import DownloadExcel from "../components/downloadExcel";
 export const revalidate = 0
 const StaffPage = async () => {
   const profileData = await prisma.user.findMany({
@@ -24,6 +25,8 @@ const StaffPage = async () => {
   })
   const profileDetails = convertData(profileData);
 
+  
+
 
   return (
     <>
@@ -38,8 +41,11 @@ const StaffPage = async () => {
           other staff
         </p>
       </div>
-
       <div className="  container">
+        <div className="pt-4 flex justify-end">
+
+<DownloadExcel data={profileDetails} type='staff'/>
+        </div>
         <StaffClient data={profileDetails} />
       </div>
     </>

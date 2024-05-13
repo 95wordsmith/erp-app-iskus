@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 
 import { ProjectClient } from "./components/client";
 import ProjectHeader from "./components/projectHeader";
+
 export const revalidate = 0
 const ProjectsPage = async () => {
   const projectData = await prisma.projects.findMany();

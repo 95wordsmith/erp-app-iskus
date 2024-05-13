@@ -17,7 +17,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
-import { useEffect } from "react";
+import { useState } from "react";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -32,6 +32,7 @@ const formSchema = z.object({
 });
 
 const LoginForm = () => {
+  const [loading,setLoading]= useState(false)
 const searchParams = useSearchParams()
 
   const initalData ={
@@ -57,27 +58,38 @@ const searchParams = useSearchParams()
     const trimmedUsername = username.trim();
     const trimmedPassword = password.trim();
 
+    
+  try {
+    setLoading(true)
     const loginData = await signIn("credentials", {
-      username: trimmedUsername,
-      password: trimmedPassword,
-      redirect: false,
-      callbackUrl: "/auth/login",
-    });
+        username: trimmedUsername,
+        password: trimmedPassword,
+        redirect: false,
+        callbackUrl: "/auth/login",
+      });
+  
+      if (loginData?.error) {
+        console.log(loginData.error);
+        toast({
+          title: "Error",
+          description: "Wrong Username or Password",
+          variant: "destructive",
+        });
+      } else {
+    setLoading(true)
 
-    if (loginData?.error) {
-      console.log(loginData.error);
-      toast({
-        title: "Error",
-        description: "Wrong Username or Password",
-        variant: "destructive",
-      });
-    } else {
-      toast({
-        title: "Success!",
-        description: "You have logged in successfully",
-      });
-      router.push("/");
-    }
+        toast({
+          title: "Success!",
+          description: "You have logged in successfully",
+        });
+        router.push("/");
+      }
+    
+  } catch (error) {
+    
+  } finally{
+    setLoading(false)
+  }
   };
 
   return (
@@ -116,7 +128,7 @@ const searchParams = useSearchParams()
             )}
           />
 
-          <Button className="mt-4" type="submit">
+          <Button disabled={loading}  className="mt-4" type="submit">
             Login
           </Button>
         </form>
