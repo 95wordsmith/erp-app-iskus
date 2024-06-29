@@ -1,7 +1,7 @@
 "use client";
 import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
-import { useSearchParams } from "next/navigation";
+
 import {
   Form,
   FormControl,
@@ -10,7 +10,6 @@ import {
   FormField,
   FormLabel,
 } from "@/components/ui/form";
-import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -32,107 +31,136 @@ const formSchema = z.object({
 });
 
 const LoginForm = () => {
-  const [loading,setLoading]= useState(false)
-const searchParams = useSearchParams()
-
-  const initalData ={
-    username: searchParams.get('username'),
-    password: searchParams.get("password")
-  }
-  
+  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
 
 
   const { toast } = useToast();
   const router = useRouter();
   const form = useForm({
     resolver: zodResolver(formSchema),
-    defaultValues: initalData.username?initalData:{
+    defaultValues: {
       username: "",
       password: "",
     },
   });
 
+  const guestLogin = async () => {
+    try {
+      setLoading(true);
+      const loginData = await signIn("credentials", {
+        username: "guest",
+        password: "Password123",
+        redirect: false,
+        callbackUrl: "/auth/login",
+      });
+
+      if (loginData?.error) {
+        toast({
+          title: "Error",
+          description: "Something went wrong!",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Success!",
+          description: "Logged in as guest",
+        });
+        router.push("/dashboard");
+      }
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const onSubmit = async (values) => {
     const { username, password } = values;
-
     const trimmedUsername = username.trim();
     const trimmedPassword = password.trim();
 
-    
-  try {
-    setLoading(true)
-    const loginData = await signIn("credentials", {
+    try {
+      setLoading(true);
+      const loginData = await signIn("credentials", {
         username: trimmedUsername,
         password: trimmedPassword,
         redirect: false,
         callbackUrl: "/auth/login",
       });
-  
+
       if (loginData?.error) {
-        console.log(loginData.error);
         toast({
           title: "Error",
           description: "Wrong Username or Password",
           variant: "destructive",
         });
       } else {
-    setLoading(true)
+        setLoading(true);
 
         toast({
           title: "Success!",
           description: "You have logged in successfully",
         });
-        router.push("/");
+        router.push("/dashboard");
       }
-    
-  } catch (error) {
-    
-  } finally{
-    setLoading(false)
-  }
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <>
-      <Form asChild {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col gap-2"
-        >
-          <FormField
-            control={form.control}
-            name="username"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Username</FormLabel>
-                <FormControl>
-                  <Input placeholder="username" {...field} />
-                </FormControl>
+      <Button disabled={loading} onClick={guestLogin} className="w-full">
+        Login as Guest
+      </Button>
+      {!open && (
+        <Button disabled={loading} onClick={() => setOpen(true)} className="w-full my-3">
+          Login with Credentials
+        </Button>
+      )}
 
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <Input type="password" placeholder="password" {...field} />
-                </FormControl>
+      {open && (
+        <Form asChild {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-col gap-2"
+          >
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input placeholder="username" {...field} />
+                  </FormControl>
 
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input type="password" placeholder="password" {...field} />
+                  </FormControl>
 
-          <Button disabled={loading}  className="mt-4" type="submit">
-            Login
-          </Button>
-        </form>
-      </Form>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Button disabled={loading} className="mt-4" type="submit">
+              Login
+            </Button>
+          </form>
+        </Form>
+      )}
     </>
   );
 };

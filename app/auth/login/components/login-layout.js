@@ -19,8 +19,7 @@ const LoginLayout = () => {
           <CardHeader>
             <CardTitle className='text-center'>Sign In To Your Portal</CardTitle>
             <CardDescription className='text-center'>
-              Only authorized users are allowed access. Contact your
-              adminstrator if you have issues.
+              Login as guest or provide your credentials
             </CardDescription>
           </CardHeader>
           <CardContent>
